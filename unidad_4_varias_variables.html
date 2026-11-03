@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo Vectorial - Unidad 4: Funciones Reales de Varias Variables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tecnm-blue': '#1b396a',
+                        'tecnm-dark': '#112445',
+                        'tecnm-accent': '#f59e0b',
+                        'book-pink': '#db2777',
+                        'book-blue': '#e0f2fe'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+        /* Estilos matemáticos tipo libro de texto */
+        .math-serif {
+            font-family: 'Times New Roman', Times, Georgia, serif;
+        }
+        /* Animaciones CSS para los dibujos vectorizados */
+        @keyframes spinWheel {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes floatSmoke {
+            0% { transform: translateY(0px) scale(0.9); opacity: 0.7; }
+            50% { transform: translateY(-8px) scale(1.1); opacity: 0.4; }
+            100% { transform: translateY(-16px) scale(1.25); opacity: 0; }
+        }
+        @keyframes heatPulse {
+            0%, 100% { transform: translateY(0px); opacity: 0.35; }
+            50% { transform: translateY(-4px); opacity: 0.9; }
+        }
+        @keyframes carBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-2px); }
+        }
+        @keyframes boxSlide {
+            0% { transform: translateX(-18px); }
+            50% { transform: translateX(18px); }
+            100% { transform: translateX(-18px); }
+        }
+        @keyframes particleWalk {
+            0% { stroke-dashoffset: 160; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .brace-bottom {
+            border-bottom: 2px solid #db2777;
+            border-left: 2px solid #db2777;
+            border-right: 2px solid #db2777;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            height: 8px;
+            position: relative;
+        }
+        .brace-bottom::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 6px;
+            background-color: #db2777;
+        }
+        input[type=range] {
+            accent-color: #1b396a;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <!-- ENCABEZADO SUPERIOR -->
+    <header class="bg-tecnm-blue text-white shadow-lg border-b-4 border-tecnm-accent sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <span class="bg-tecnm-accent text-slate-900 text-xs font-extrabold px-2.5 py-1 rounded uppercase tracking-wider">ACF-0904</span>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight">Cálculo Vectorial</h1>
+                </div>
+                <p class="text-slate-200 text-sm mt-0.5">Unidad 4: Funciones reales de varias variables</p>
+            </div>
+            <div class="text-right">
+                <div class="font-bold text-sm md:text-base">TecNM Campus Zacatepec</div>
+                <div class="text-xs text-slate-300"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="flex-1 max-w-7xl w-full mx-auto flex flex-col md:flex-row bg-white shadow-xl my-4 rounded-2xl overflow-hidden border border-slate-200">
+        
+        <!-- BARRA LATERAL DE NAVEGACIÓN (PESTAÑAS) -->
+        <aside class="w-full md:w-72 bg-slate-50 border-b md:border-b-0 md:border-r border-slate-200 flex-shrink-0">
+            <div class="p-4 border-b border-slate-200 bg-slate-100">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Temario de la Unidad 4</h2>
+            </div>
+            <nav class="p-2 space-y-1">
+                <button onclick="switchTab('4-1')" id="nav-4-1" class="tab-nav-btn w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center justify-between text-slate-700 hover:bg-slate-200/70">
+                    <span>4.1 Definición de una función</span>
+                </button>
+                <button onclick="switchTab('4-2')" id="nav-4-2" class="tab-nav-btn w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center justify-between text-slate-700 hover:bg-slate-200/70">
+                    <span>4.2 Gráficas y curvas de nivel</span>
+                </button>
+                <button onclick="switchTab('4-3')" id="nav-4-3" class="tab-nav-btn w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-between bg-tecnm-blue text-white shadow-md">
+                    <span>4.3 Límite y continuidad</span>
+                </button>
+                <div class="pt-2 pb-1 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">Próximos Subtemas</div>
+                <div class="px-4 py-2.5 text-xs text-slate-400 flex items-center justify-between cursor-not-allowed">
+                    <span>4.4 Derivadas parciales</span>
+                    <span>🔒</span>
+                </div>
+                <div class="px-4 py-2.5 text-xs text-slate-400 flex items-center justify-between cursor-not-allowed">
+                    <span>4.5 Incrementos y diferenciales</span>
+                    <span>🔒</span>
+                </div>
+                <div class="px-4 py-2.5 text-xs text-slate-400 flex items-center justify-between cursor-not-allowed">
+                    <span>4.6 Regla de la cadena</span>
+                    <span>🔒</span>
+                </div>
+                <div class="px-4 py-2.5 text-xs text-slate-400 flex items-center justify-between cursor-not-allowed">
+                    <span>4.7 Derivadas de orden superior</span>
+                    <span>🔒</span>
+                </div>
+                <div class="px-4 py-2.5 text-xs text-slate-400 flex items-center justify-between cursor-not-allowed">
+                    <span>4.8 Derivada direccional y gradiente</span>
+                    <span>🔒</span>
+                </div>
+                <div class="px-4 py-2.5 text-xs text-slate-400 flex items-center justify-between cursor-not-allowed">
+                    <span>4.9 Valores extremos</span>
+                    <span>🔒</span>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- ÁREA DE CONTENIDO DINÁMICO -->
+        <main class="flex-1 p-6 md:p-8 overflow-y-auto">
+
+            <!-- ========================================================================= -->
+            <!-- PESTAÑA 4.1: DEFINICIÓN DE UNA FUNCIÓN DE VARIAS VARIABLES                -->
+            <!-- ========================================================================= -->
+<!-- ========================================================================= -->
+            <!-- PESTAÑA 4.1: DEFINICIÓN DE UNA FUNCIÓN DE VARIAS VARIABLES                -->
+            <!-- ========================================================================= -->
+            <section id="tab-4-1" class="tab-section hidden space-y-8">
+                
+                <!-- Encabezado 4.1 -->
+                <div class="border-b border-slate-200 pb-4">
+                    <div class="inline-block text-3xl font-bold uppercase tracking-widest text-tecnm-blue bg-blue-50 px-4 py-2 border border-blue-200 mb-3">
+                        4.1 Definición de una función de varias variables
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-black">Introducción</h2>
+                    <p class="text-black mt-1 text-lg text-justify leading-relaxed">Hasta ahora en este curso y en tus materias de cálculo diferencial e integral, haz estudiado funciones donde solo tienes <strong>"una variable independiente"</strong>, sin embargo, en la naturaleza un resultado casi nunca depende de un solo factor aislado, sino de múltiples variables actuando al mismo tiempo.</p>
+                </div>
+
+                <!-- Selector de Analogías -->
+                <div>
+                    <div class="text-lg font-bold uppercase tracking-wider text-black mb-3">Ejemplos de analogías cotidianas que depende varias variables:</div>
+                    <div class="flex flex-wrap gap-3 mb-6">
+                        <button onclick="setAnalogy('freidora')" id="btn-freidora" class="analogy-btn bg-tecnm-blue text-white px-5 py-2.5 rounded-full font-semibold shadow-md transition-all flex items-center gap-2 border-2 border-tecnm-blue text-lg">
+                            <span>🍟</span> Cocción de alimentos
+                        </button>
+                        <button onclick="setAnalogy('auto')" id="btn-auto" class="analogy-btn bg-white text-black hover:bg-slate-100 px-5 py-2.5 rounded-full font-semibold shadow-sm transition-all flex items-center gap-2 border-2 border-slate-200 text-lg">
+                            <span>🚗</span> Rendimiento de combustible
+                        </button>
+                        <button onclick="setAnalogy('fabrica')" id="btn-fabrica" class="analogy-btn bg-white text-black hover:bg-slate-100 px-5 py-2.5 rounded-full font-semibold shadow-sm transition-all flex items-center gap-2 border-2 border-slate-200 text-lg">
+                            <span>🏭</span> Fabricación de productos
+                        </button>
+                    </div>
+
+                    <!-- Contenedor de la Analogía Activa -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Panel Izquierdo: Controles -->
+                        <div class="bg-gradient-to-br from-white to-slate-50 p-6 rounded-2xl shadow-lg border border-slate-200 border-t-4 border-t-tecnm-accent flex flex-col justify-between">
+                            <div>
+                                <h3 id="anaTitle" class="font-bold text-3xl text-black mb-2">Cocinando en la freidora de aire</h3>
+                                <p id="anaDesc" class="text-lg text-black mb-5 min-h-[44px] text-justify">Para obtener la cocción perfecta (z), ajustas simultáneamente la Temperatura (x) y el Tiempo (y). Si te pasas, se quema; si falta, queda crudo.</p>
+                                
+                                <div class="bg-indigo-50 text-indigo-900 font-sans text-lg p-4 rounded-xl border border-indigo-200 mb-6 text-center shadow-inner">
+                                    <span id="anaFormula" class="font-bold text-xl tracking-wide">z = f(Temperatura, Tiempo)</span>
+                                </div>
+
+                                <!-- Slider 1 (X) -->
+                                <div class="mb-5">
+                                    <div class="flex justify-between items-center mb-1.5">
+                                        <label id="labelX" class="text-lg font-semibold text-black">Temperatura (x)</label>
+                                        <span id="valX" class="text-lg font-bold bg-blue-100 text-blue-800 px-2.5 py-1 rounded-md">180°C</span>
+                                    </div>
+                                    <input type="range" id="sliderX" min="100" max="220" step="5" value="180" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+                                </div>
+
+                                <!-- Slider 2 (Y) -->
+                                <div>
+                                    <div class="flex justify-between items-center mb-1.5">
+                                        <label id="labelY" class="text-lg font-semibold text-black">Tiempo (y)</label>
+                                        <span id="valY" class="text-lg font-bold bg-blue-100 text-blue-800 px-2.5 py-1 rounded-md">15 min</span>
+                                    </div>
+                                    <input type="range" id="sliderY" min="1" max="30" step="1" value="15" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel Derecho: SVG y Resultado -->
+                        <div class="bg-gradient-to-br from-white to-slate-50 p-6 rounded-2xl shadow-lg border border-slate-200 flex flex-col items-center justify-center relative overflow-hidden">
+                            <div id="svgCanvas" class="w-full h-56 flex items-center justify-center mb-4"></div>
+                            <div class="text-center w-full bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <div class="text-lg text-black uppercase tracking-widest font-bold mb-1" id="labelZ">Nivel de cocción (z)</div>
+                                <div class="text-3xl font-extrabold text-black" id="valZ">Cocido correctamente 🌟</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TEORÍA DEL LIBRO PARAFRASEADA (4.1) -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 space-y-8">
+                    <div class="border-b border-slate-200 pb-4">
+                        <h3 class="text-3xl font-extrabold text-black">Funciones de varias variables</h3>
+                    </div>
+
+                    <!-- Introducción y Ejemplos Físicos -->
+                    <div class="space-y-4 text-black leading-relaxed text-lg text-justify">
+                        <p>
+                            En Cálculo Diferencial estudiaste funciones de <strong>una sola variable independiente</strong>, como <strong>y = f(x)</strong>. Sin embargo, en la ingeniería y en las ciencias aplicadas, la mayoría de las magnitudes dependen de <strong>dos o más variables</strong>:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div class="text-lg font-bold uppercase text-black">Física (2 variables)</div>
+                                <div class="font-bold text-black mt-1">Trabajo Mecánico</div>
+                                <div class="text-xl font-bold text-tecnm-blue mt-1">W = F · D</div>
+                                <p class="text-lg text-black mt-1 text-left">Depende de la Fuerza (F) y la Distancia (D).</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div class="text-lg font-bold uppercase text-black">Geometría (2 variables)</div>
+                                <div class="font-bold text-black mt-1">Volumen de un Cilindro</div>
+                                <div class="text-xl font-bold text-tecnm-blue mt-1">V = π r²h</div>
+                                <p class="text-lg text-black mt-1 text-left">Depende del radio (r) y la altura (h).</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div class="text-lg font-bold uppercase text-black">Empaque (3 variables)</div>
+                                <div class="font-bold text-black mt-1">Caja Rectangular</div>
+                                <div class="text-xl font-bold text-tecnm-blue mt-1">V = l · w · h</div>
+                                <p class="text-lg text-black mt-1 text-left">Depende de largo (l), ancho (w) y alto (h).</p>
+                            </div>
+                        </div>
+
+                        <!-- Ecuaciones con Llaves Didácticas Rosas -->
+                        <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-6 my-6">
+                            <div class="text-lg font-bold uppercase tracking-wider text-black text-left">Notación estándar de una función de varias variables:</div>
+                            
+                            <!-- Ejemplo 2 variables -->
+                            <div class="flex flex-col md:flex-row items-center justify-between bg-white p-5 rounded-xl border border-slate-200 shadow-sm gap-4">
+                                <div class="flex items-start gap-2 text-xl font-bold text-black">
+                                    <span>z = f</span>
+                                    <div class="flex flex-col items-center">
+                                        <span>(x, y)</span>
+                                        <div class="w-full brace-bottom mt-0.5"></div>
+                                        <span class="font-sans text-sm font-bold text-book-pink mt-2">2 variables</span>
+                                    </div>
+                                    <span>= x² + xy</span>
+                                </div>
+                                <div class="text-book-pink font-semibold text-lg bg-pink-50 px-4 py-1.5 rounded-full border border-pink-200">
+                                    Función de 2 variables.
+                                </div>
+                            </div>
+
+                            <!-- Ejemplo 3 variables -->
+                            <div class="flex flex-col md:flex-row items-center justify-between bg-white p-5 rounded-xl border border-slate-200 shadow-sm gap-4">
+                                <div class="flex items-start gap-2 text-xl font-bold text-black">
+                                    <span>w = f</span>
+                                    <div class="flex flex-col items-center">
+                                        <span>(x, y, z)</span>
+                                        <div class="w-full brace-bottom mt-0.5"></div>
+                                        <span class="font-sans text-sm font-bold text-book-pink mt-2">3 variables</span>
+                                    </div>
+                                    <span>= x + 2y − 3z</span>
+                                </div>
+                                <div class="text-book-pink font-semibold text-lg bg-pink-50 px-4 py-1.5 rounded-full border border-pink-200">
+                                    Función de 3 variables.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caja de Definición Formal (Dominio y Rango) -->
+                    <div class="border-2 border-sky-400 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-sky-50 px-5 py-2.5 border-b border-sky-300 font-bold text-xl tracking-wider uppercase text-black text-left">
+                            Definición de una Función de Dos Variables
+                        </div>
+                        <div class="p-5 bg-white text-lg text-black text-justify leading-relaxed space-y-3">
+                            <p>
+                                Sea <strong>D</strong> un conjunto de pares ordenados de números reales. Si a cada par ordenado <strong>(x, y)</strong> de <strong>D</strong> le corresponde un <strong>único número real</strong> <strong>f(x, y)</strong>, entonces se dice que <strong>f</strong> es una <strong>función de x y y</strong>.
+                            </p>
+                            <ul class="list-disc list-inside space-y-1 text-lg bg-slate-50 p-4 rounded-lg border border-slate-200 text-left">
+                                <li>El conjunto <strong>D</strong> es el <strong>dominio</strong> de f (todas las combinaciones de entrada válidas).</li>
+                                <li>El conjunto de valores resultantes <strong>f(x, y)</strong> es el <strong>rango</strong> de f (las salidas posibles).</li>
+                                <li>En <strong>z = f(x, y)</strong>, las letras <strong>x y y son las variables independientes</strong> (perillas que tú mueves) y <strong>z es la variable dependiente</strong> (el resultado final).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico Vectorial Interactivo del Mapeo (Dominio D -> Rango R) -->
+                    <div class="mt-6 flex flex-col bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                        <h3 class="text-2xl font-bold uppercase tracking-wider text-black mb-4 text-left">
+                            Recordemos ¿Qué es una función f(x, y) ?
+                        </h3>
+                        
+                        <!-- Explicación de Función (Justificada) -->
+                        <div class="mb-6 w-full text-lg text-black text-justify leading-relaxed space-y-3">
+                            <p>
+                                Las funciones son el corazón de las matemáticas. Más allá de ser simples fórmulas o gráficas abstractas, <strong>se utilizan como modelos matemáticos para resolver problemas de la vida real</strong>.
+                            </p>
+                            <p>
+                                En términos prácticos, una función (f) es una <strong>regla de correspondencia</strong> que conecta a dos conjuntos. Toma cada elemento de un primer grupo llamado <strong>Dominio</strong>, y le asigna <em>un único</em> resultado en un segundo grupo llamado <strong>Contradominio (o Rango)</strong>.
+                            </p>
+                            
+                            <div class="text-center mt-3 mb-2">
+                                <p class="text-lg text-black bg-slate-50 py-2 px-4 rounded-lg inline-block border border-slate-100 text-left">
+                                    Esta relación matemática de <strong>f: D → R</strong> se puede visualizar claramente mediante el siguiente <strong>diagrama de flechas</strong>:
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Contenedor del dibujo SVG centrado -->
+                        <div class="w-full max-w-lg mx-auto">
+                            <svg viewBox="0 0 500 350" class="w-full h-auto text-slate-800" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Definición de puntas de flecha y efectos -->
+                                <defs>
+                                    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#1e293b" />
+                                    </marker>
+                                    <marker id="arrow-hover" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#0284c7" />
+                                    </marker>
+                                    <style>
+                                        .mapeo-group { transition: all 0.3s ease; cursor: pointer; }
+                                        .mapeo-group:hover .set-item { fill: #0284c7; font-weight: bold; }
+                                        .mapeo-group:hover .connect-arrow { stroke: #0284c7; stroke-width: 3.5; marker-end: url(#arrow-hover); }
+                                        .mapeo-group:hover .ellipse-bg { fill: #e0f2fe; stroke: #38bdf8; stroke-width: 2.5; }
+                                        .pulse { animation: pulseAnim 2s infinite; }
+                                        @keyframes pulseAnim {
+                                            0% { transform: scale(1); opacity: 1; }
+                                            50% { transform: scale(1.05); opacity: 0.8; }
+                                            100% { transform: scale(1); opacity: 1; }
+                                        }
+                                    </style>
+                                </defs>
+
+                                <!-- Conjunto D (Dominio) -->
+                                <g>
+                                    <ellipse cx="120" cy="180" rx="80" ry="140" fill="#f0f9ff" stroke="#bae6fd" stroke-width="2" class="ellipse-bg transition-all duration-300" />
+                                    <text x="120" y="30" font-family="serif" font-size="24" font-weight="bold" font-style="italic" fill="#0369a1" text-anchor="middle">D</text>
+                                    <text x="120" y="52" font-size="11" fill="#0369a1" font-weight="600" text-anchor="middle" class="opacity-80">DOMINIO</text>
+                                </g>
+
+                                <!-- Función f (Enlace) -->
+                                <g transform="translate(250, 25)">
+                                    <circle cx="0" cy="0" r="18" fill="#e0f2fe" class="pulse" />
+                                    <text x="0" y="7" font-family="serif" font-size="22" font-style="italic" fill="#0284c7" font-weight="bold" text-anchor="middle">f</text>
+                                    <path d="M -30 -15 Q 0 -30 30 -15" fill="none" stroke="#0284c7" stroke-dasharray="3,3" stroke-width="1.5" />
+                                </g>
+
+                                <!-- Conjunto R (Rango) -->
+                                <g>
+                                    <ellipse cx="380" cy="180" rx="80" ry="140" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" class="ellipse-bg transition-all duration-300" />
+                                    <text x="380" y="30" font-family="serif" font-size="24" font-weight="bold" font-style="italic" fill="#334155" text-anchor="middle">R</text>
+                                    <text x="380" y="52" font-size="11" fill="#475569" font-weight="600" text-anchor="middle" class="opacity-80">RANGO</text>
+                                </g>
+
+                                <!-- Relaciones (Pares ordenados -> Resultados) -->
+                                <!-- Elemento 1 -->
+                                <g class="mapeo-group">
+                                    <text x="120" y="105" font-family="serif" font-size="16" font-style="italic" fill="#1e293b" text-anchor="middle" class="set-item transition-all">(x₁, y₁)</text>
+                                    <line x1="165" y1="100" x2="330" y2="100" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" class="connect-arrow transition-all" />
+                                    <text x="380" y="105" font-family="serif" font-size="16" font-style="italic" fill="#1e293b" text-anchor="middle" class="set-item transition-all">f(x₁, y₁)</text>
+                                </g>
+
+                                <!-- Elemento 2 -->
+                                <g class="mapeo-group">
+                                    <text x="120" y="150" font-family="serif" font-size="16" font-style="italic" fill="#1e293b" text-anchor="middle" class="set-item transition-all">(x₂, y₂)</text>
+                                    <line x1="165" y1="145" x2="330" y2="145" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" class="connect-arrow transition-all" />
+                                    <text x="380" y="150" font-family="serif" font-size="16" font-style="italic" fill="#1e293b" text-anchor="middle" class="set-item transition-all">f(x₂, y₂)</text>
+                                </g>
+
+                                <!-- Elemento 3 -->
+                                <g class="mapeo-group">
+                                    <text x="120" y="195" font-family="serif" font-size="16" font-style="italic" fill="#1e293b" text-anchor="middle" class="set-item transition-all">(x₃, y₃)</text>
+                                    <line x1="165" y1="195" x2="330" y2="175" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" class="connect-arrow transition-all" />
+                                    <text x="380" y="195" font-family="serif" font-size="16" font-style="italic" fill="#1e293b" text-anchor="middle" class="set-item transition-all">f(x₃, y₃)</text>
+                                </g>
+
+                                <!-- Elemento 4 -->
+                                <g class="mapeo-group">
+                                    <text x="120" y="240" font-family="serif" font-size="16" font-style="italic" fill="#1e293b" text-anchor="middle" class="set-item transition-all">(x₄, y₄)</text>
+                                    <line x1="165" y1="235" x2="330" y2="235" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" class="connect-arrow transition-all" />
+                                    <text x="380" y="240" font-family="serif" font-size="16" font-style="italic" fill="#1e293b" text-anchor="middle" class="set-item transition-all">f(x₄, y₄)</text>
+                                </g>
+
+                                <!-- Puntos suspensivos en el Dominio -->
+                                <g fill="#64748b">
+                                    <circle cx="120" cy="275" r="3" />
+                                    <circle cx="120" cy="290" r="3" />
+                                    <circle cx="120" cy="305" r="3" />
+                                </g>
+
+                                <!-- Puntos suspensivos en el Rango -->
+                                <g fill="#64748b">
+                                    <circle cx="380" cy="275" r="3" />
+                                    <circle cx="380" cy="290" r="3" />
+                                    <circle cx="380" cy="305" r="3" />
+                                </g>
+                            </svg>
+                        </div>
+                        
+                        <div class="text-center w-full mt-2">
+                            <span class="text-sm text-black">
+                                💡 Pasa el cursor sobre los elementos de la izquierda para resaltar el mapeo f(x,y).
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ========================================================================= -->
+                    <!-- NUEVA SECCIÓN DE EJERCICIOS PRÁCTICOS                                     -->
+                    <!-- ========================================================================= -->
+                    <div class="bg-indigo-50/50 rounded-2xl border border-indigo-200 p-6 md:p-8 space-y-6 mt-10">
+                        <div class="border-b border-indigo-200 pb-3 flex items-center justify-between">
+                            <h3 class="text-2xl font-extrabold text-indigo-900">¿Relación o Función?</h3>
+                            <span class="bg-indigo-600 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-sm">Ejemplos</span>
+                        </div>
+                        <p class="text-lg text-indigo-950/80 leading-relaxed text-justify">
+                            Evalúa tu comprensión de la definición formal analizando los siguientes casos. Recuerda que para que una relación sea función, a cada elemento del dominio debe corresponderle <strong>exactamente un único</strong> elemento en el contradominio.
+                        </p>
+
+                        <!-- Pestañas para los 3 tipos de ejercicios -->
+                        <div class="bg-white rounded-xl shadow-sm border border-indigo-100 overflow-hidden">
+                            <div class="flex border-b border-indigo-100 bg-indigo-50/50">
+                                <button onclick="showExerciseTab('diagrams')" id="btn-ex-diagrams" class="flex-1 py-4 text-lg font-bold text-indigo-700 border-b-4 border-indigo-600 bg-white transition-all">1. Diagramas de Flechas</button>
+                                <button onclick="showExerciseTab('pairs')" id="btn-ex-pairs" class="flex-1 py-4 text-lg font-semibold text-slate-500 hover:text-indigo-600 transition-all">2. Pares Ordenados</button>
+                                <button onclick="showExerciseTab('graphs')" id="btn-ex-graphs" class="flex-1 py-4 text-lg font-semibold text-slate-500 hover:text-indigo-600 transition-all">3. Gráficas</button>
+                            </div>
+
+                            <div class="p-6 md:p-8">
+                                <!-- Ejercicio 1: Diagramas de Flechas -->
+                                <div id="ex-diagrams" class="space-y-8">
+                                    <div class="text-xl font-bold text-black mb-6">Determina si los siguientes diagramas representan una función o una relación:</div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                        <!-- Diagrama 1 -->
+                                        <div class="flex flex-col items-center space-y-4">
+                                            <div class="w-full max-w-[280px]">
+                                                <svg viewBox="0 0 200 120" class="w-full h-auto text-black" xmlns="http://www.w3.org/2000/svg">
+                                                    <defs>
+                                                        <marker id="arrowhead-ex" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="currentColor" />
+                                                        </marker>
+                                                    </defs>
+                                                    <text x="15" y="15" font-family="serif" font-size="14">1.</text>
+                                                    <ellipse cx="60" cy="70" rx="30" ry="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <ellipse cx="140" cy="70" rx="30" ry="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <text x="60" y="20" font-family="serif" font-size="14" font-style="italic" text-anchor="middle">A</text>
+                                                    <text x="140" y="20" font-family="serif" font-size="14" font-style="italic" text-anchor="middle">B</text>
+                                                    
+                                                    <text x="60" y="45" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">2</text>
+                                                    <text x="60" y="65" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">3</text>
+                                                    <text x="60" y="85" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">4</text>
+                                                    <text x="60" y="105" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">5</text>
+                                                    
+                                                    <text x="140" y="45" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">4</text>
+                                                    <text x="140" y="65" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">9</text>
+                                                    <text x="140" y="85" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">16</text>
+                                                    <text x="140" y="105" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">25</text>
+                                                    
+                                                    <line x1="75" y1="41" x2="125" y2="41" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="61" x2="125" y2="61" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="81" x2="125" y2="81" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="101" x2="125" y2="101" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('¡Correcto! Es una función porque a cada elemento de A le corresponde un solo elemento de B.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('Incorrecto. Revisa si de algún número en A sale más de una flecha.')">Relación</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Diagrama 2 -->
+                                        <div class="flex flex-col items-center space-y-4">
+                                            <div class="w-full max-w-[280px]">
+                                                <svg viewBox="0 0 200 120" class="w-full h-auto text-black" xmlns="http://www.w3.org/2000/svg">
+                                                    <text x="15" y="15" font-family="serif" font-size="14">2.</text>
+                                                    <ellipse cx="60" cy="70" rx="30" ry="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <ellipse cx="140" cy="70" rx="30" ry="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <text x="60" y="20" font-family="serif" font-size="14" font-style="italic" text-anchor="middle">A</text>
+                                                    <text x="140" y="20" font-family="serif" font-size="14" font-style="italic" text-anchor="middle">B</text>
+                                                    
+                                                    <text x="60" y="50" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">2</text>
+                                                    <text x="60" y="70" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">4</text>
+                                                    <text x="60" y="90" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">5</text>
+                                                    
+                                                    <text x="140" y="40" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">9</text>
+                                                    <text x="140" y="60" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">8</text>
+                                                    <text x="140" y="80" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">3</text>
+                                                    <text x="140" y="100" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">2</text>
+                                                    
+                                                    <line x1="75" y1="46" x2="125" y2="36" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="48" x2="125" y2="76" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="68" x2="125" y2="56" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="88" x2="125" y2="98" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('Incorrecto. Observa el número 2 en el conjunto A.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('¡Correcto! Es una relación porque del elemento 2 en el conjunto A salen dos flechas distintas.')">Relación</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Diagrama 3 -->
+                                        <div class="flex flex-col items-center space-y-4">
+                                            <div class="w-full max-w-[280px]">
+                                                <svg viewBox="0 0 200 120" class="w-full h-auto text-black" xmlns="http://www.w3.org/2000/svg">
+                                                    <text x="15" y="15" font-family="serif" font-size="14">3.</text>
+                                                    <ellipse cx="60" cy="70" rx="30" ry="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <ellipse cx="140" cy="70" rx="30" ry="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <text x="60" y="20" font-family="serif" font-size="14" font-style="italic" text-anchor="middle">A</text>
+                                                    <text x="140" y="20" font-family="serif" font-size="14" font-style="italic" text-anchor="middle">B</text>
+                                                    
+                                                    <text x="60" y="45" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">2</text>
+                                                    <text x="60" y="75" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">4</text>
+                                                    <text x="60" y="105" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">5</text>
+                                                    
+                                                    <text x="140" y="75" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">10</text>
+                                                    
+                                                    <line x1="75" y1="45" x2="123" y2="70" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="75" x2="123" y2="74" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="103" x2="123" y2="78" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('¡Correcto! Aunque todos apunten al mismo resultado (función constante), de cada elemento en A sale exactamente una sola flecha.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('Incorrecto. Que todos apunten a 10 no viola la regla. ¿Sale más de una flecha de algún número en A?')">Relación</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Diagrama 4 -->
+                                        <div class="flex flex-col items-center space-y-4">
+                                            <div class="w-full max-w-[280px]">
+                                                <svg viewBox="0 0 200 120" class="w-full h-auto text-black" xmlns="http://www.w3.org/2000/svg">
+                                                    <text x="15" y="15" font-family="serif" font-size="14">4.</text>
+                                                    <ellipse cx="60" cy="70" rx="30" ry="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <ellipse cx="140" cy="70" rx="30" ry="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <text x="60" y="20" font-family="serif" font-size="14" font-style="italic" text-anchor="middle">A</text>
+                                                    <text x="140" y="20" font-family="serif" font-size="14" font-style="italic" text-anchor="middle">B</text>
+                                                    
+                                                    <text x="60" y="70" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">8</text>
+                                                    
+                                                    <text x="140" y="40" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">1</text>
+                                                    <text x="140" y="70" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">2</text>
+                                                    <text x="140" y="100" font-family="serif" font-size="12" font-style="italic" text-anchor="middle">3</text>
+                                                    
+                                                    <line x1="75" y1="67" x2="125" y2="38" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="70" x2="125" y2="70" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="75" y1="73" x2="125" y2="102" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('Incorrecto. Un solo valor de entrada está generando 3 resultados diferentes.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('¡Correcto! Del elemento 8 salen múltiples flechas, violando la regla de unicidad.')">Relación</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ejercicio 2: Pares Ordenados -->
+                                <div id="ex-pairs" class="space-y-8 hidden">
+                                    <div class="text-xl font-bold text-black mb-6">Determina si los siguientes conjuntos de pares ordenados corresponden a una función o a una relación:</div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-lg font-serif italic text-black">
+                                        
+                                        <div class="flex flex-col bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                            <div class="mb-4 text-center tracking-wide">A = { (−2, 4), (3, 9), (4, 16), (5, 25) }</div>
+                                            <div class="flex justify-center gap-2 mt-auto">
+                                                <button class="px-4 py-1.5 rounded bg-white hover:bg-slate-200 border border-slate-300 text-sm font-sans font-bold not-italic" onclick="alert('¡Correcto! Todos los primeros valores de los pares (las x) son diferentes.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-white hover:bg-slate-200 border border-slate-300 text-sm font-sans font-bold not-italic" onclick="alert('Incorrecto. No hay ninguna x repetida.')">Relación</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                            <div class="mb-4 text-center tracking-wide">B = { (3, 2), (3, 6), (5, 7), (5, 8) }</div>
+                                            <div class="flex justify-center gap-2 mt-auto">
+                                                <button class="px-4 py-1.5 rounded bg-white hover:bg-slate-200 border border-slate-300 text-sm font-sans font-bold not-italic" onclick="alert('Incorrecto. Observa los primeros números de cada par.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-white hover:bg-slate-200 border border-slate-300 text-sm font-sans font-bold not-italic" onclick="alert('¡Correcto! El valor x=3 tiene dos resultados distintos (2 y 6), y lo mismo ocurre con x=5.')">Relación</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                            <div class="mb-4 text-center tracking-wide">C = { (2, 4), (3, 4), (5, 4), (6, 4) }</div>
+                                            <div class="flex justify-center gap-2 mt-auto">
+                                                <button class="px-4 py-1.5 rounded bg-white hover:bg-slate-200 border border-slate-300 text-sm font-sans font-bold not-italic" onclick="alert('¡Correcto! Es una función constante. Los valores de x (2, 3, 5, 6) no se repiten, aunque la y siempre sea 4.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-white hover:bg-slate-200 border border-slate-300 text-sm font-sans font-bold not-italic" onclick="alert('Incorrecto. Que la segunda coordenada se repita no afecta. ¿Se repite la primera coordenada?')">Relación</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                            <div class="mb-4 text-center tracking-wide">M = { (2, 4), (6, 2), (7, 3), (4, 12), (2, 6) }</div>
+                                            <div class="flex justify-center gap-2 mt-auto">
+                                                <button class="px-4 py-1.5 rounded bg-white hover:bg-slate-200 border border-slate-300 text-sm font-sans font-bold not-italic" onclick="alert('Incorrecto. Busca bien si hay algún valor de entrada repetido con diferente salida.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-white hover:bg-slate-200 border border-slate-300 text-sm font-sans font-bold not-italic" onclick="alert('¡Correcto! El número 2 aparece dos veces como entrada con resultados distintos: (2, 4) y (2, 6).')">Relación</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!-- Ejercicio 3: Gráficas -->
+                                <div id="ex-graphs" class="space-y-8 hidden">
+                                    <div class="text-xl font-bold text-black mb-6">Determina si las siguientes gráficas representan una relación o una función. (Usa la prueba de la línea vertical)</div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                        <!-- Gráfica 1 -->
+                                        <div class="flex flex-col items-center space-y-4">
+                                            <div class="w-full max-w-[280px]">
+                                                <svg viewBox="0 0 200 150" class="w-full h-auto text-black" xmlns="http://www.w3.org/2000/svg">
+                                                    <text x="5" y="15" font-family="serif" font-size="14">1.</text>
+                                                    <line x1="20" y1="130" x2="190" y2="130" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="40" y1="145" x2="40" y2="10" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <text x="180" y="145" font-family="serif" font-size="14" font-weight="bold" font-style="italic">X</text>
+                                                    <text x="25" y="20" font-family="serif" font-size="14" font-weight="bold" font-style="italic">Y</text>
+                                                    
+                                                    <path d="M 160 30 Q 5 60 50 100 Q 95 140 160 120" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('Incorrecto. Si trazas una línea vertical, corta la curva en dos puntos.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('¡Correcto! Una línea vertical tocaría la gráfica en dos puntos simultáneamente (falla la prueba de la línea vertical).')">Relación</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Gráfica 2 -->
+                                        <div class="flex flex-col items-center space-y-4">
+                                            <div class="w-full max-w-[280px]">
+                                                <svg viewBox="0 0 250 150" class="w-full h-auto text-black" xmlns="http://www.w3.org/2000/svg">
+                                                    <text x="5" y="15" font-family="serif" font-size="14">2.</text>
+                                                    <line x1="20" y1="85" x2="240" y2="85" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <line x1="130" y1="145" x2="130" y2="10" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrowhead-ex)"/>
+                                                    <text x="230" y="100" font-family="serif" font-size="14" font-weight="bold" font-style="italic">X</text>
+                                                    <text x="115" y="20" font-family="serif" font-size="14" font-weight="bold" font-style="italic">Y</text>
+                                                    
+                                                    <path d="M 35 85 Q 55 -20 85 85 T 180 85 T 225 85" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('¡Correcto! Cualquier línea vertical trazada a lo largo del eje X cortará la onda senoidal en un solo punto.')">Función</button>
+                                                <button class="px-4 py-1.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-sm font-bold text-slate-700" onclick="alert('Incorrecto. Intenta trazar líneas verticales imaginarias, ¿alguna corta la gráfica más de una vez?')">Relación</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <script>
+                        function showExerciseTab(tabName) {
+                            document.getElementById('ex-diagrams').classList.add('hidden');
+                            document.getElementById('ex-pairs').classList.add('hidden');
+                            document.getElementById('ex-graphs').classList.add('hidden');
+                            
+                            document.getElementById('btn-ex-diagrams').className = 'flex-1 py-4 text-lg font-semibold text-slate-500 hover:text-indigo-600 transition-all';
+                            document.getElementById('btn-ex-pairs').className = 'flex-1 py-4 text-lg font-semibold text-slate-500 hover:text-indigo-600 transition-all';
+                            document.getElementById('btn-ex-graphs').className = 'flex-1 py-4 text-lg font-semibold text-slate-500 hover:text-indigo-600 transition-all';
+                            
+                            document.getElementById('ex-' + tabName).classList.remove('hidden');
+                            document.getElementById('btn-ex-' + tabName).className = 'flex-1 py-4 text-lg font-bold text-indigo-700 border-b-4 border-indigo-600 bg-white transition-all';
+                        }
+                    </script>
+                    <!-- ========================================================================= -->
+                    <!-- FIN DE SECCIÓN DE EJERCICIOS PRÁCTICOS                                    -->
+                    <!-- ========================================================================= -->
+
+                    <!-- Operaciones, Composición y Polinomiales -->
+                    <div class="flex flex-col gap-6">
+                        <div class="bg-sky-50/70 p-6 rounded-2xl border border-sky-200 space-y-4">
+                            <h4 class="font-bold text-black text-2xl uppercase tracking-wider">Combinación de Funciones</h4>
+                      
+                        <!-- Texto de la combinacion de funciones -->
+                        <div class="mb-6 w-full text-lg text-black text-justify leading-relaxed space-y-3">
+                            <p>
+                                Las funciones de varias variables pueden combinarse de la misma manera que las funciones de una sola variable. Por ejemplo, se puede formar <strong>la suma, la diferencia, el producto y el cociente</strong> de funciones de dos variables como sigue:
+                            </p>
+                        </div>
+                                
+                                <!-- INICIO DE ECUACIÓN DE FRACCIÓN MODIFICADA (TAMAÑO AUMENTADO) -->
+                                <div class="space-y-4 text-xl bg-white p-5 rounded-xl border border-sky-100 text-black">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-sky-50 pb-2">
+                                    <span class="math-serif">(<i>f</i> ± <i>g</i>)(<i>x, y</i>) = <i>f</i>(<i>x, y</i>) ± <i>g</i>(<i>x, y</i>)</span>
+                                    <span class="font-sans text-lg font-semibold text-book-pink">Suma o diferencia</span>
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-sky-50 pb-2">
+                                    <span class="math-serif">(<i>fg</i>)(<i>x, y</i>) = <i>f</i>(<i>x, y</i>)<i>g</i>(<i>x, y</i>)</span>
+                                    <span class="font-sans text-lg font-semibold text-book-pink">Producto</span>
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                                    <div class="flex items-center gap-3 math-serif">
+                                        <!-- f/g -->
+                                        <div class="flex flex-col items-center justify-center">
+                                            <span class="border-b-[1.5px] border-black px-1 leading-none pb-1"><i>f</i></span>
+                                            <span class="leading-none pt-1"><i>g</i></span>
+                                        </div>
+                                        <span>(<i>x, y</i>) =</span>
+                                        <!-- f(x,y) / g(x,y) -->
+                                        <div class="flex flex-col items-center justify-center">
+                                            <span class="border-b-[1.5px] border-black px-2 leading-none pb-1"><i>f</i>(<i>x, y</i>)</span>
+                                            <span class="leading-none pt-1"><i>g</i>(<i>x, y</i>)</span>
+                                        </div>
+                                        <span class="ml-2"><i>g</i>(<i>x, y</i>) ≠ 0</span>
+                                    </div>
+                                    <span class="font-sans text-lg font-semibold text-book-pink mt-4 sm:mt-0">Cociente</span>
+                                </div>
+                                <!-- FIN DE ECUACIÓN DE FRACCIÓN MODIFICADA (TAMAÑO AUMENTADO) -->
+                                
+                            </div>
+                        </div>
+
+                        <div class="bg-sky-50/70 p-6 rounded-2xl border border-sky-200 space-y-4">
+                        <!-- Texto de funcion compuesta -->
+                        <div class="mb-6 w-full text-lg text-black text-justify leading-relaxed space-y-3">
+                            <p>
+                                No se puede formar la composición de dos funciones de varias variables. Sin embargo, si <strong>h</strong> es una función de varias variables y <strong>g</strong> es una función de una sola variable, puede formarse la función compuesta como sigue:
+                            </p>
+                        </div>
+                            <div class="bg-white p-5 rounded-xl border border-sky-100 space-y-4 text-xl text-black">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b pb-3">
+                                    <span class="math-serif">(<i>g</i> ∘ <i>h</i>)(<i>x, y</i>) = <i>g</i>(<i>h</i>(<i>x, y</i>))</span>
+                                    <span class="font-sans text-lg font-semibold text-book-pink">Composición</span>
+                            </div>
+                        </div>
+                    </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- PESTAÑA 4.2: GRÁFICAS, TRAZAS Y CURVAS DE NIVEL                           -->
+            <!-- ========================================================================= -->
+            <section id="tab-4-2" class="tab-section hidden space-y-10">
+                
+                <!-- Encabezado 4.2 -->
+                <div class="border-b border-slate-200 pb-4">
+                    <span class="text-xs font-bold uppercase tracking-widest text-tecnm-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Subtema 4.2</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 mt-2">Gráfica de una función de varias variables y Curvas de nivel</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Cómo visualizar superficies tridimensionales mediante "rebanadas" (trazas) y mapas de contorno en 2D.</p>
+                </div>
+
+                <!-- Explicación de Superficie y Trazas -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 space-y-6">
+                    <h3 class="text-2xl font-extrabold text-book-pink">1. Gráfica de una función de dos variables y el método de Trazas</h3>
+                    <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                        Así como la gráfica de una función de una variable <span class="math-serif italic">y = f(x)</span> es una curva en el plano 2D, la <strong>gráfica</strong> de una función de dos variables <span class="math-serif italic">z = f(x, y)</span> es una <strong>superficie en el espacio 3D</strong> formada por todos los puntos <span class="math-serif italic">(x, y, z)</span>. Imagina que el dominio <span class="math-serif italic">D</span> es una alfombra en el piso (plano <span class="math-serif italic">xy</span>) y sobre cada punto <span class="math-serif italic">(x, y)</span> levantas un poste de altura <span class="math-serif italic">z = f(x, y)</span> hasta formar una sábana suspendida.
+                    </p>
+                    <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                        Para dibujar una superficie <em>a mano</em> (o entender cómo la construye una computadora), usamos <strong>trazas</strong>: cortes o "rebanadas" de la superficie con planos paralelos a los planos coordenados. Veamos paso a paso el ejemplo del libro al cortar la superficie <span class="math-serif font-bold"><i>z</i> = √(16 − 4<i>x</i><sup>2</sup> − <i>y</i><sup>2</sup>)</span> a una altura fija <span class="math-serif font-bold"><i>z</i> = 2</span>:
+                    </p>
+
+                    <!-- Despeje Algebraico Paso a Paso -->
+                    <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col items-center space-y-4">
+                        <div class="text-xs font-bold uppercase tracking-wider text-book-pink bg-pink-50 px-4 py-1 rounded-full border border-pink-200">
+                            Sustituimos la altura fija z = 2 en la ecuación original
+                        </div>
+                        <div class="math-serif text-xl md:text-2xl font-bold text-slate-800">
+                            2 = <span class="border-t-2 border-slate-800 px-1">√(16 − 4<i>x</i><sup>2</sup> − <i>y</i><sup>2</sup>)</span>
+                        </div>
+                        <div class="text-xs font-bold text-book-pink bg-pink-50 px-4 py-1 rounded-full border border-pink-200">
+                            Elevamos ambos lados al cuadrado para eliminar la raíz
+                        </div>
+                        <div class="math-serif text-xl md:text-2xl font-bold text-slate-800">
+                            4 = 16 − 4<i>x</i><sup>2</sup> − <i>y</i><sup>2</sup>
+                        </div>
+                        <div class="text-xs font-bold text-book-pink bg-pink-50 px-4 py-1 rounded-full border border-pink-200">
+                            Reordenamos variables a la izquierda y constantes a la derecha
+                        </div>
+                        <div class="math-serif text-xl md:text-2xl font-bold text-slate-800">
+                            4<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup> = 12
+                        </div>
+                        <div class="text-xs font-bold text-book-pink bg-pink-50 px-4 py-1 rounded-full border border-pink-200">
+                            Dividimos toda la ecuación entre 12 para igualar a 1
+                        </div>
+                        <div class="bg-white px-8 py-4 rounded-2xl border-2 border-slate-200 shadow-sm math-serif text-xl md:text-2xl font-bold text-slate-900 flex items-center gap-3">
+                            <div class="flex flex-col items-center">
+                                <span class="border-b-2 border-slate-800 px-2"><i>x</i><sup>2</sup></span>
+                                <span>3</span>
+                            </div>
+                            <span>+</span>
+                            <div class="flex flex-col items-center">
+                                <span class="border-b-2 border-slate-800 px-2"><i>y</i><sup>2</sup></span>
+                                <span>12</span>
+                            </div>
+                            <span>= 1</span>
+                        </div>
+                        <div class="text-center pt-1">
+                            <div class="text-book-pink font-extrabold text-sm md:text-base">↑ Por tanto, la traza en el plano z = 2 es una Elipse centrada en (0, 0, 2)</div>
+                            <div class="text-xs text-slate-500 mt-0.5">Con semiejes <i>a</i> = √3 ≈ 1.73 en el Eje X &nbsp;y&nbsp; <i>b</i> = √12 = 2√3 ≈ 3.46 en el Eje Y (longitudes totales 2√3 y 4√3).</div>
+                        </div>
+                    </div>
+
+                    <!-- Simulador Interactivo 3D + 2D de la Traza -->
+                    <div class="bg-slate-900 text-white rounded-2xl p-6 space-y-5">
+                        <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-700 pb-4">
+                            <div>
+                                <span class="text-[11px] uppercase tracking-widest text-amber-400 font-bold">Laboratorio Visual de Rebanadas (Trazas)</span>
+                                <h4 class="text-lg font-bold">Superficie: <span class="math-serif italic text-sky-300">z = √(16 − 4x² − y²)</span></h4>
+                            </div>
+                            <div class="flex items-center gap-4 bg-slate-800 px-4 py-2 rounded-xl border border-slate-700">
+                                <label class="text-xs font-semibold text-slate-300">Altura del corte (<span class="text-pink-400 font-bold">z = <span id="traceZVal">2.0</span></span>):</label>
+                                <input type="range" id="traceZSlider" min="0" max="3.9" step="0.1" value="2.0" class="w-36 h-2 bg-slate-600 rounded-lg cursor-pointer">
+                                <button onclick="setTraceZ(2.0)" class="text-xs bg-pink-600 hover:bg-pink-500 px-2.5 py-1 rounded font-bold transition-colors">Fijar z=2</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Vista 3D del Domo con Ejes Etiquetados -->
+                            <div class="bg-slate-800/90 rounded-xl p-4 border border-slate-700 flex flex-col items-center">
+                                <div class="text-xs font-bold text-slate-300 mb-2">Vista 3D en el Espacio (Ejes X, Y, Z)</div>
+                                <svg id="dome3DSvg" viewBox="0 0 360 260" class="w-full max-w-md h-60"></svg>
+                            </div>
+                            <!-- Vista 2D de la Elipse en el Plano XY -->
+                            <div class="bg-slate-800/90 rounded-xl p-4 border border-slate-700 flex flex-col items-center">
+                                <div class="text-xs font-bold text-slate-300 mb-2">Vista 2D del Corte proyectado en el Plano XY</div>
+                                <svg id="ellipse2DSvg" viewBox="0 0 360 260" class="w-full max-w-md h-60"></svg>
+                            </div>
+                        </div>
+                        <div id="traceEquationBox" class="text-center text-xs md:text-sm bg-slate-800 py-2.5 px-4 rounded-xl border border-slate-700 text-slate-200"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 2: Curvas de Nivel y Cobb-Douglas -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 space-y-10">
+                    <div class="space-y-4">
+                        <h3 class="text-2xl font-extrabold text-slate-800">2. ¿Qué es una Curva de Nivel?</h3>
+                        <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                            Existe una segunda manera muy ingeniosa de visualizar una función de dos variables sin tener que dibujar en 3D: usar un <strong>campo escalar</strong> o <strong>mapa de contorno</strong>.
+                        </p>
+                        <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                            Si tomamos todas las trazas horizontales que cortamos a diferentes alturas fijas (<span class="math-serif italic">f(x, y) = c</span>) y las <strong>aplastamos o proyectamos directamente sobre el piso (plano xy)</strong>, obtenemos las llamadas <strong class="text-book-pink">curvas de nivel</strong> (o líneas de contorno). Si caminas sobre una curva de nivel, tu altura <span class="math-serif italic">z</span> jamás cambia; permanece 100% constante.
+                        </p>
+                    </div>
+
+                    <!-- Tarjetas de Isobaras, Isotermas y Equipotenciales con Dibujos Vectorizados -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Isobaras -->
+                        <div class="bg-sky-50/70 p-6 rounded-2xl border border-sky-200 flex flex-col justify-between space-y-5 shadow-sm">
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h4 class="font-extrabold text-sky-950 text-xl">Isobaras</h4>
+                                    <span class="bg-sky-200/80 text-sky-900 text-xs font-bold px-3 py-1 rounded-full">Presión constante</span>
+                                </div>
+                                <p class="text-sm text-sky-950/90 leading-relaxed">
+                                    En los mapas meteorológicos (Fig. 13.5 del libro), las curvas conectan ciudades que tienen exactamente la misma <strong>presión atmosférica</strong> (medida en milibares, ej. 1008 mb).
+                                </p>
+                            </div>
+                            <div class="bg-white rounded-xl p-3 border border-sky-100 shadow-inner">
+                                <svg viewBox="0 0 220 80" class="w-full h-20">
+                                    <path d="M 15 62 Q 65 8 125 45 T 205 18" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+                                    <path d="M 15 74 Q 70 22 125 58 T 205 32" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round"/>
+                                    <ellipse cx="152" cy="54" rx="28" ry="15" fill="none" stroke="#0369a1" stroke-width="2.5"/>
+                                    <text x="62" y="48" font-size="10" font-weight="bold" fill="#0369a1">1004 mb</text>
+                                    <text x="138" y="58" font-size="10" font-weight="bold" fill="#0369a1">1008</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Isotermas -->
+                        <div class="bg-amber-50/70 p-6 rounded-2xl border border-amber-200 flex flex-col justify-between space-y-5 shadow-sm">
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h4 class="font-extrabold text-amber-950 text-xl">Isotermas</h4>
+                                    <span class="bg-amber-200/80 text-amber-900 text-xs font-bold px-3 py-1 rounded-full">Temperatura igual</span>
+                                </div>
+                                <p class="text-sm text-amber-950/90 leading-relaxed">
+                                    En los mapas climáticos (Fig. 13.6), son curvas que unen todos los puntos geográficos donde se siente exactamente la misma <strong>temperatura</strong> (ej. 60°F, 70°F, 80°F).
+                                </p>
+                            </div>
+                            <div class="bg-white rounded-xl p-3 border border-amber-100 shadow-inner">
+                                <svg viewBox="0 0 220 80" class="w-full h-20">
+                                    <path d="M 20 26 Q 110 8 200 26" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+                                    <path d="M 20 48 Q 110 30 200 48" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+                                    <path d="M 20 70 Q 110 52 200 70" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                                    <text x="110" y="15" text-anchor="middle" font-size="10" font-weight="bold" fill="#1d4ed8">60°F</text>
+                                    <text x="110" y="37" text-anchor="middle" font-size="10" font-weight="bold" fill="#b45309">70°F</text>
+                                    <text x="110" y="59" text-anchor="middle" font-size="10" font-weight="bold" fill="#b91c1c">80°F</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Equipotenciales -->
+                        <div class="bg-purple-50/70 p-6 rounded-2xl border border-purple-200 flex flex-col justify-between space-y-5 shadow-sm">
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h4 class="font-extrabold text-purple-950 text-xl">Equipotenciales</h4>
+                                    <span class="bg-purple-200/80 text-purple-900 text-xs font-bold px-3 py-1 rounded-full leading-tight text-center">Voltaje constante</span>
+                                </div>
+                                <p class="text-sm text-purple-950/90 leading-relaxed">
+                                    En física e ingeniería eléctrica, representan anillos en el espacio donde el <strong>potencial eléctrico (voltaje)</strong> tiene exactamente el mismo valor alrededor de una carga.
+                                </p>
+                            </div>
+                            <div class="bg-white rounded-xl p-3 border border-purple-100 shadow-inner">
+                                <svg viewBox="0 0 220 80" class="w-full h-20">
+                                    <circle cx="105" cy="40" r="34" fill="none" stroke="#a855f7" stroke-width="1.8" stroke-dasharray="4,3"/>
+                                    <circle cx="105" cy="40" r="20" fill="none" stroke="#7e22ce" stroke-width="2.2"/>
+                                    <circle cx="105" cy="40" r="7" fill="#6b21a8"/>
+                                    <text x="105" y="43.5" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">+</text>
+                                    <text x="128" y="38" font-size="9.5" font-weight="bold" fill="#6b21a8">10V</text>
+                                    <text x="143" y="25" font-size="9.5" font-weight="bold" fill="#7e22ce">5V</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mapa Topográfico y Regla del Espaciado -->
+                    <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Mapas Topográficos (Figuras 13.7 y 13.8)</span>
+                            <h4 class="text-xl font-bold text-slate-800">¿Cómo leer la separación entre curvas de nivel?</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Al elegir valores de altura <span class="math-serif italic">c</span> uniformemente espaciados (por ejemplo, cada 100 m de altitud), el espacio horizontal entre las líneas te revela la inclinación del terreno:
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li class="flex items-start gap-2 bg-white p-3 rounded-lg border border-slate-200">
+                                    <span class="text-red-600 font-extrabold">●</span>
+                                    <span><strong>Curvas muy juntas (espacio pequeño):</strong> Indican que la altura <i>z</i> cambia <strong>muy rápido</strong> (acantilado o pendiente empinada).</span>
+                                </li>
+                                <li class="flex items-start gap-2 bg-white p-3 rounded-lg border border-slate-200">
+                                    <span class="text-emerald-600 font-extrabold">●</span>
+                                    <span><strong>Curvas muy separadas (espacio grande):</strong> Indican que la altura <i>z</i> cambia <strong>lentamente</strong> (llanura o colina suave).</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <svg viewBox="0 0 360 230" class="w-full h-auto">
+                                <!-- Perfil de la montaña arriba -->
+                                <text x="12" y="18" font-size="10" font-weight="bold" fill="#475569">Perfil 3D de la Montaña (Cortes cada Δz fijo)</text>
+                                <line x1="30" y1="95" x2="330" y2="95" stroke="#94a3b8" stroke-width="1.5"/>
+                                <line x1="30" y1="75" x2="330" y2="75" stroke="#cbd5e1" stroke-dasharray="3,3"/>
+                                <line x1="30" y1="55" x2="330" y2="55" stroke="#cbd5e1" stroke-dasharray="3,3"/>
+                                <line x1="30" y1="35" x2="330" y2="35" stroke="#cbd5e1" stroke-dasharray="3,3"/>
+                                <!-- Silueta asimétrica: empinada a la izquierda, suave a la derecha -->
+                                <path d="M 55 95 L 75 35 Q 90 22 115 35 L 285 95 Z" fill="#10b981" fill-opacity="0.25" stroke="#047857" stroke-width="2.5"/>
+                                <!-- Proyecciones punteadas hacia el mapa de contorno inferior -->
+                                <line x1="75" y1="35" x2="75" y2="170" stroke="#ef4444" stroke-dasharray="2,2"/>
+                                <line x1="68" y1="55" x2="68" y2="170" stroke="#ef4444" stroke-dasharray="2,2"/>
+                                <line x1="61" y1="75" x2="61" y2="170" stroke="#ef4444" stroke-dasharray="2,2"/>
+                                <line x1="115" y1="35" x2="115" y2="170" stroke="#059669" stroke-dasharray="2,2"/>
+                                <line x1="172" y1="55" x2="172" y2="170" stroke="#059669" stroke-dasharray="2,2"/>
+                                <line x1="228" y1="75" x2="228" y2="170" stroke="#059669" stroke-dasharray="2,2"/>
+                                <!-- Mapa de curvas de nivel abajo -->
+                                <text x="12" y="122" font-size="10" font-weight="bold" fill="#475569">Mapa Topográfico 2D (Vista desde arriba)</text>
+                                <ellipse cx="170" cy="170" rx="115" ry="42" fill="none" stroke="#0f766e" stroke-width="1.5"/>
+                                <ellipse cx="145" cy="170" rx="83" ry="32" fill="none" stroke="#0f766e" stroke-width="1.5"/>
+                                <ellipse cx="120" cy="170" rx="52" ry="22" fill="none" stroke="#0f766e" stroke-width="1.5"/>
+                                <ellipse cx="95" cy="170" rx="20" ry="11" fill="none" stroke="#be123c" stroke-width="2"/>
+                                <text x="52" y="222" font-size="9" font-weight="bold" fill="#be123c">← Juntas (Acantilado)</text>
+                                <text x="195" y="222" font-size="9" font-weight="bold" fill="#047857">Separadas (Pendiente suave) →</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- 3. Función de Producción de Cobb-Douglas (Diseño amplio con corchetes e Isocuanta) -->
+                    <div class="space-y-5 pt-2">
+                        <h3 class="text-2xl font-extrabold text-slate-800">3. Aplicación en Ingeniería Industrial y Economía: Modelo de Cobb-Douglas</h3>
+                        <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                            Las curvas de nivel no solo sirven para mapas físicos; son esenciales para optimizar fábricas. El libro destaca la famosa <strong>función de producción de Cobb-Douglas</strong>, utilizada para calcular cuántas unidades de producto se fabrican al combinar <strong>Trabajo</strong> (horas-hombre) y <strong>Capital</strong> (maquinaria y equipo):
+                        </p>
+
+                        <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                            <!-- Ecuación con corchetes inferiores de colores -->
+                            <div class="lg:col-span-6 flex items-center justify-center">
+                                <div class="flex items-start gap-3 math-serif text-3xl md:text-4xl text-slate-900">
+                                    <span class="italic pt-1">f(x, y) = C</span>
+                                    <div class="flex flex-col items-center">
+                                        <span class="italic px-3 pb-2">x<sup>a</sup></span>
+                                        <div class="w-full h-2.5 border-b-2 border-l-2 border-r-2 border-book-pink"></div>
+                                        <span class="font-sans text-xs font-extrabold text-book-pink mt-2 whitespace-nowrap">Trabajo (x)</span>
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <span class="italic px-3 pb-2">y<sup>1−a</sup></span>
+                                        <div class="w-full h-2.5 border-b-2 border-l-2 border-r-2 border-sky-500"></div>
+                                        <span class="font-sans text-xs font-extrabold text-sky-600 mt-2 whitespace-nowrap">Capital (y)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lista de variables -->
+                            <div class="lg:col-span-6 space-y-2.5 text-sm md:text-base text-slate-700">
+                                <div>• <strong class="italic math-serif text-lg">f(x, y)</strong>: Número total de unidades producidas.</div>
+                                <div>• <strong class="italic math-serif text-lg">x</strong>: Unidades de trabajo (operadores).</div>
+                                <div>• <strong class="italic math-serif text-lg">y</strong>: Unidades de capital (máquinas/inversión).</div>
+                                <div>• <strong class="italic math-serif text-lg">C y a</strong>: Constantes de la planta (con <span class="italic math-serif">0 &lt; a &lt; 1</span>).</div>
+                            </div>
+                        </div>
+
+                        <!-- Nota de Isocuanta -->
+                        <div class="bg-amber-50/90 border border-amber-200 rounded-2xl p-5 text-sm md:text-base text-amber-950 leading-relaxed shadow-sm">
+                            💡 <strong>¿Qué significa una curva de nivel en Cobb-Douglas?</strong> En economía industrial se le llama <strong>Isocuanta</strong>. Si fijas la producción en <span class="italic">f(x, y) = 1,000 piezas</span>, la curva de nivel te muestra todas las combinaciones posibles de obreros (<span class="italic">x</span>) y robots (<span class="italic">y</span>) que logran fabricar exactamente esas mismas 1,000 piezas (por ejemplo: muchos obreros con pocas máquinas, o pocos obreros con muchas máquinas automatizadas).
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- PESTAÑA 4.3: LÍMITE Y CONTINUIDAD DE UNA FUNCIÓN DE VARIAS VARIABLES      -->
+            <!-- ========================================================================= -->
+            <section id="tab-4-3" class="tab-section space-y-10">
+                
+                <!-- Encabezado 4.3 -->
+                <div class="border-b border-slate-200 pb-4">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-widest text-tecnm-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Subtema 4.3</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-pink-700 bg-pink-50 px-3 py-1 rounded-full border border-pink-200">Puente con Cálculo Diferencial</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 mt-2">Límite y continuidad de una función de varias variables</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">De los intervalos en la recta real a los discos en el plano, la trampa de los infinitos caminos y cómo detectar si una superficie está intacta o rota.</p>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- BLOQUE A: PUENTE DIDÁCTICO 1D -> 2D (DISCO) -> 3D (ESFERA)      -->
+                <!-- =============================================================== -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 space-y-6">
+                    <div>
+                        <h3 class="text-2xl font-extrabold text-book-pink">1. Entornos en el Plano: ¿Cómo nos acercamos a un punto?</h3>
+                        <p class="text-slate-700 text-sm md:text-base leading-relaxed mt-2">
+                            Para estudiar límites en <strong>Cálculo Diferencial</strong> (una variable), encerrábamos al punto <span class="math-serif italic">x<sub>0</sub></span> dentro de un pequeño <strong>intervalo abierto</strong> de radio <span class="math-serif">δ &gt; 0</span> en la recta numérica. Ahora, en <strong>Cálculo Vectorial</strong>, como el punto <span class="math-serif italic">(x<sub>0</sub>, y<sub>0</sub>)</span> vive en el plano 2D, usamos la fórmula de la distancia entre dos puntos (Teorema de Pitágoras) para rodearlo con una "zona de radar circular" llamada <strong>entorno δ</strong> o <strong>disco</strong>:
+                        </p>
+                    </div>
+
+                    <!-- Ecuación destacada del Disco Abierto (igual al libro) -->
+                    <div class="bg-sky-50/90 border-2 border-sky-200 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-around gap-4 shadow-inner">
+                        <div class="math-serif text-lg md:text-2xl font-bold text-slate-900 text-center">
+                            { (<i>x, y</i>) : <span class="border-t-2 border-slate-800 px-1">√((<i>x</i> − <i>x</i><sub>0</sub>)<sup>2</sup> + (<i>y</i> − <i>y</i><sub>0</sub>)<sup>2</sup>)</span> &lt; δ }
+                        </div>
+                        <div class="flex flex-col items-center md:items-end">
+                            <span class="text-book-pink font-extrabold text-base md:text-lg">Disco abierto.</span>
+                            <span class="text-xs text-slate-500">Si usa <b>&lt;</b> es <b>abierto</b> (sin borde); si usa <b>≤</b> es <b>cerrado</b> (incluye borde).</span>
+                        </div>
+                    </div>
+
+                    <!-- Comparativa Visual en 3 Columnas: 1D vs 2D vs 3D -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        <!-- Columna 1: Cálculo Diferencial (1D) -->
+                        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 bg-slate-200 px-2.5 py-0.5 rounded">Recordatorio: 1 Variable</span>
+                                <h4 class="font-bold text-slate-800 text-base mt-2">Intervalo en la Recta Real</h4>
+                                <p class="text-xs text-slate-600 mt-1">Solo existen <strong>2 direcciones</strong> para acercarse a <i>x</i><sub>0</sub>: por la izquierda y por la derecha.</p>
+                            </div>
+                            <svg viewBox="0 0 240 120" class="w-full h-32 my-3 bg-white rounded-xl border border-slate-200 p-2">
+                                <line x1="15" y1="65" x2="225" y2="65" stroke="#475569" stroke-width="2"/>
+                                <!-- Intervalo (x0-d, x0+d) -->
+                                <line x1="65" y1="65" x2="175" y2="65" stroke="#db2777" stroke-width="5" opacity="0.35"/>
+                                <circle cx="65" cy="65" r="5" fill="white" stroke="#db2777" stroke-width="2"/>
+                                <circle cx="175" cy="65" r="5" fill="white" stroke="#db2777" stroke-width="2"/>
+                                <circle cx="120" cy="65" r="4.5" fill="#0f172a"/>
+                                <!-- Flechas laterales -->
+                                <path d="M 30 45 L 105 45" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowB)"/>
+                                <path d="M 210 45 L 135 45" stroke="#2563eb" stroke-width="2"/>
+                                <text x="120" y="88" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">x₀</text>
+                                <text x="65" y="88" text-anchor="middle" font-size="10" fill="#db2777">x₀ − δ</text>
+                                <text x="175" y="88" text-anchor="middle" font-size="10" fill="#db2777">x₀ + δ</text>
+                                <text x="120" y="25" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e40af">Solo 2 caminos (Izq / Der)</text>
+                            </svg>
+                            <div class="text-center math-serif text-sm font-bold bg-white py-1.5 rounded-lg border border-slate-200">
+                                |<i>x</i> − <i>x</i><sub>0</sub>| &lt; δ
+                            </div>
+                        </div>
+
+                        <!-- Columna 2: 2 Variables (Disco Abierto - Fig 13.18) -->
+                        <div class="bg-pink-50/40 rounded-2xl p-5 border-2 border-pink-200 flex flex-col justify-between">
+                            <div>
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-book-pink bg-pink-100 px-2.5 py-0.5 rounded">2 Variables (Figura 13.18)</span>
+                                <h4 class="font-bold text-slate-800 text-base mt-2">Disco Abierto en el Plano XY</h4>
+                                <p class="text-xs text-slate-600 mt-1">El borde punteado indica que <strong>no incluye</strong> la circunferencia frontera (signo <b>&lt;</b>). ¡Hay <strong>infinitos caminos</strong>!</p>
+                            </div>
+                            <svg viewBox="0 0 240 140" class="w-full h-32 my-3 bg-white rounded-xl border border-pink-200 p-2">
+                                <!-- Ejes -->
+                                <line x1="25" y1="120" x2="220" y2="120" stroke="#64748b" stroke-width="1.5"/>
+                                <line x1="35" y1="130" x2="35" y2="10" stroke="#64748b" stroke-width="1.5"/>
+                                <text x="225" y="123" font-size="10" font-style="italic" fill="#475569">x</text>
+                                <text x="32" y="10" font-size="10" font-style="italic" fill="#475569">y</text>
+                                <!-- Disco abierto -->
+                                <circle cx="130" cy="65" r="44" fill="#fce7f3" stroke="#0f172a" stroke-width="1.8" stroke-dasharray="4,4"/>
+                                <!-- Radio delta -->
+                                <line x1="130" y1="65" x2="161" y2="34" stroke="#db2777" stroke-width="2" stroke-dasharray="3,2"/>
+                                <text x="140" y="45" font-size="12" font-weight="bold" fill="#db2777">δ</text>
+                                <!-- Centro -->
+                                <circle cx="130" cy="65" r="3.5" fill="#0f172a"/>
+                                <text x="130" y="80" text-anchor="middle" font-size="11" font-family="serif" fill="#0f172a">(x₀, y₀)</text>
+                            </svg>
+                            <div class="text-center math-serif text-sm font-bold bg-white py-1.5 rounded-lg border border-pink-200 text-book-pink">
+                                √((<i>x</i>−<i>x</i><sub>0</sub>)<sup>2</sup> + (<i>y</i>−<i>y</i><sub>0</sub>)<sup>2</sup>) &lt; δ
+                            </div>
+                        </div>
+
+                        <!-- Columna 3: 3 Variables (Esfera Abierta - Fig 13.28) -->
+                        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded">3 Variables (Figura 13.28)</span>
+                                <h4 class="font-bold text-slate-800 text-base mt-2">Esfera Abierta en el Espacio 3D</h4>
+                                <p class="text-xs text-slate-600 mt-1">Para funciones <span class="math-serif italic">w = f(x, y, z)</span>, el entorno es una burbuja esférica de radio δ centrada en <span class="math-serif italic">(x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>)</span>.</p>
+                            </div>
+                            <svg viewBox="0 0 240 140" class="w-full h-32 my-3 bg-white rounded-xl border border-slate-200 p-2">
+                                <defs>
+                                    <radialGradient id="sphere3D" cx="35%" cy="35%" r="65%">
+                                        <stop offset="0%" stop-color="#f3e8ff"/>
+                                        <stop offset="60%" stop-color="#c084fc"/>
+                                        <stop offset="100%" stop-color="#6b21a8"/>
+                                    </radialGradient>
+                                </defs>
+                                <!-- Ejes 3D -->
+                                <line x1="45" y1="105" x2="45" y2="12" stroke="#64748b" stroke-width="1.5"/>
+                                <line x1="45" y1="105" x2="210" y2="120" stroke="#64748b" stroke-width="1.5"/>
+                                <line x1="45" y1="105" x2="15" y2="132" stroke="#64748b" stroke-width="1.5"/>
+                                <text x="48" y="15" font-size="9" font-style="italic">z</text>
+                                <text x="215" y="123" font-size="9" font-style="italic">y</text>
+                                <text x="8" y="135" font-size="9" font-style="italic">x</text>
+                                <!-- Esfera -->
+                                <circle cx="130" cy="64" r="44" fill="url(#sphere3D)" opacity="0.82" stroke="#7e22ce" stroke-width="1.2" stroke-dasharray="3,3"/>
+                                <ellipse cx="130" cy="64" rx="44" ry="14" fill="none" stroke="#581c87" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+                                <circle cx="130" cy="64" r="3" fill="#0f172a"/>
+                                <line x1="130" y1="64" x2="174" y2="64" stroke="#db2777" stroke-width="2" stroke-dasharray="3,2"/>
+                                <text x="152" y="75" font-size="11" font-weight="bold" fill="#db2777">δ</text>
+                                <text x="125" y="55" text-anchor="middle" font-size="9" font-family="serif" fill="#0f172a">(x₀, y₀, z₀)</text>
+                            </svg>
+                            <div class="text-center math-serif text-xs font-bold bg-white py-1.5 rounded-lg border border-slate-200 text-purple-800">
+                                (<i>x</i>−<i>x</i><sub>0</sub>)<sup>2</sup> + (<i>y</i>−<i>y</i><sub>0</sub>)<sup>2</sup> + (<i>z</i>−<i>z</i><sub>0</sub>)<sup>2</sup> &lt; δ<sup>2</sup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- BLOQUE B: SIMULADOR 1 - PUNTO INTERIOR VS PUNTO FRONTERA        -->
+                <!-- =============================================================== -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 space-y-6">
+                    <div class="flex flex-wrap justify-between items-start gap-4">
+                        <div class="max-w-2xl">
+                            <span class="text-xs font-bold uppercase tracking-wider text-tecnm-blue bg-blue-50 px-3 py-1 rounded-full">Simulador Interactivo 1 (Figura 13.19)</span>
+                            <h3 class="text-xl md:text-2xl font-extrabold text-slate-800 mt-2">Puntos Interiores, Puntos Frontera y Regiones Abiertas/Cerradas</h3>
+                            <p class="text-sm text-slate-600 mt-1">
+                                Imagina que la región <span class="math-serif font-bold italic">R</span> es el terreno de una planta industrial. Usa los botones y ajusta el radio <span class="math-serif font-bold">δ</span> del radar para comprobar cuándo un punto es <strong>interior</strong> y cuándo es <strong>frontera</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <!-- Controles Izquierda -->
+                        <div class="lg:col-span-5 space-y-4">
+                            <div class="text-xs font-bold uppercase text-slate-400">1. Elige el punto a inspeccionar:</div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <button onclick="setRegionMode('interior')" id="btn-reg-interior" class="bg-tecnm-blue text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm transition-all">
+                                    📍 Punto Interior
+                                </button>
+                                <button onclick="setRegionMode('frontera')" id="btn-reg-frontera" class="bg-white text-slate-700 border border-slate-300 py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-slate-100 transition-all">
+                                    🚧 Punto Frontera
+                                </button>
+                            </div>
+
+                            <div class="text-xs font-bold uppercase text-slate-400 pt-2">2. Tipo de Disco / Región:</div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <button onclick="setDiskBoundary('open')" id="btn-disk-open" class="bg-pink-600 text-white py-2 px-3 rounded-xl text-xs font-bold shadow-sm transition-all">
+                                    Abierto (&lt; δ) Punteado
+                                </button>
+                                <button onclick="setDiskBoundary('closed')" id="btn-disk-closed" class="bg-white text-slate-700 border border-slate-300 py-2 px-3 rounded-xl text-xs font-bold hover:bg-slate-100 transition-all">
+                                    Cerrado (≤ δ) Continuo
+                                </button>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                                <div class="flex justify-between text-xs font-bold">
+                                    <span>Tamaño del radio del entorno (δ):</span>
+                                    <span id="deltaRegionLabel" class="text-book-pink">δ = 0.60</span>
+                                </div>
+                                <input type="range" id="deltaRegionSlider" min="0.2" max="1.3" step="0.05" value="0.60" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+                            </div>
+
+                            <!-- Diagnóstico Dinámico -->
+                            <div id="regionFeedbackBox" class="p-4 rounded-xl border-l-4 border-emerald-500 bg-emerald-50 text-xs md:text-sm text-slate-700 space-y-1"></div>
+                        </div>
+
+                        <!-- Lienzo SVG Derecha (Figura 13.19 interactiva) -->
+                        <div class="lg:col-span-7 bg-white rounded-2xl p-4 border border-slate-200 shadow-inner flex flex-col items-center">
+                            <svg id="regionSvg" viewBox="0 0 420 260" class="w-full max-w-lg h-64"></svg>
+                        </div>
+                    </div>
+
+                    <!-- Resumen de Conceptos Clave del Libro -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
+                        <div class="bg-sky-50 p-4 rounded-xl border border-sky-200">
+                            <strong class="text-slate-900 block mb-1">🟢 Región Abierta:</strong>
+                            Si <em>todos</em> los puntos de la región <span class="math-serif italic">R</span> son puntos interiores (no incluye su cáscara o borde).
+                        </div>
+                        <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                            <strong class="text-slate-900 block mb-1">🟠 Punto Frontera:</strong>
+                            Está justo en la orilla de <span class="math-serif italic">R</span>: todo disco centrado en él muerde tanto puntos <em>dentro</em> de <span class="math-serif italic">R</span> como puntos <em>fuera</em> de <span class="math-serif italic">R</span>.
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200">
+                            <strong class="text-slate-900 block mb-1">🔵 Región Cerrada:</strong>
+                            Es una región que contiene todos sus puntos interiores <strong>más todos sus puntos frontera</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- BLOQUE C: DEFINICIÓN FORMAL DEL LÍMITE (ε - δ) Y FIGURA 13.20   -->
+                <!-- =============================================================== -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 space-y-6">
+                    <h3 class="text-2xl font-extrabold text-book-pink">2. Definición Formal del Límite (ε − δ) y su Significado Geométrico</h3>
+
+                    <!-- Caja Azul Oficial del Libro -->
+                    <div class="border-2 border-sky-400 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-sky-50 px-5 py-2.5 border-b border-sky-300 font-bold text-xs md:text-sm tracking-wider uppercase text-slate-800">
+                            Definición del Límite de una Función de Dos Variables
+                        </div>
+                        <div class="p-6 bg-white space-y-4 text-slate-700 text-sm md:text-base">
+                            <p>
+                                Sea <span class="math-serif italic">f</span> una función de dos variables definida en un disco abierto centrado en <span class="math-serif italic">(x<sub>0</sub>, y<sub>0</sub>)</span>, excepto posiblemente en el propio punto <span class="math-serif italic">(x<sub>0</sub>, y<sub>0</sub>)</span>, y sea <span class="math-serif italic font-bold">L</span> un número real. Entonces:
+                            </p>
+                            <div class="bg-slate-50 py-4 px-6 rounded-xl border border-slate-200 text-center math-serif text-xl md:text-2xl font-bold text-slate-900">
+                                <span class="inline-flex flex-col items-center mr-2 align-middle">
+                                    <span>lím</span>
+                                    <span class="text-xs font-normal">(<i>x, y</i>) → (<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>)</span>
+                                </span>
+                                <i>f</i>(<i>x, y</i>) = <i>L</i>
+                            </div>
+                            <p>
+                                si para cada <strong class="text-book-pink">ε &gt; 0</strong> (tolerancia vertical en el eje <i>z</i>) existe un <strong class="text-tecnm-blue">δ &gt; 0</strong> (radio horizontal en el piso <i>xy</i>) tal que:
+                            </p>
+                            <div class="flex flex-col md:flex-row items-center justify-center gap-4 bg-pink-50/50 p-4 rounded-xl border border-pink-200 math-serif text-lg md:text-xl font-bold text-slate-900">
+                                <div class="flex flex-col items-center">
+                                    <span>| <i>f</i>(<i>x, y</i>) − <i>L</i> | &lt; ε</span>
+                                    <span class="font-sans text-[11px] font-bold text-book-pink mt-1">La altura z cae entre L−ε y L+ε</span>
+                                </div>
+                                <span class="font-sans text-sm font-semibold text-slate-600">siempre que</span>
+                                <div class="flex flex-col items-center">
+                                    <span>0 &lt; √((<i>x</i> − <i>x</i><sub>0</sub>)<sup>2</sup> + (<i>y</i> − <i>y</i><sub>0</sub>)<sup>2</sup>) &lt; δ</span>
+                                    <span class="font-sans text-[11px] font-bold text-tecnm-blue mt-1">(x, y) esté dentro del disco δ (sin importar qué pase en el centro exacto)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Simulador Geométrico Figura 13.20 -->
+                    <div class="bg-slate-900 text-white rounded-2xl p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        <div class="lg:col-span-5 space-y-4">
+                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">Visualizador 3D (Figura 13.20 del Libro)</span>
+                            <h4 class="text-lg font-bold">La Analogía del Francotirador Industrial</h4>
+                            <p class="text-xs md:text-sm text-slate-300 leading-relaxed">
+                                Piensa en <strong class="text-pink-400">L</strong> como la medida ideal de una pieza y en <strong class="text-pink-400">L ± ε</strong> como la banda de tolerancia de calidad en el eje vertical <i>z</i>.
+                            </p>
+                            <p class="text-xs md:text-sm text-slate-300 leading-relaxed">
+                                El límite existe si al restringir las variables de entrada <span class="math-serif italic">(x, y)</span> dentro del <strong>disco de radio δ</strong> en el piso, garantizas que toda la porción proyectada de la sábana 3D quede atrapada entre <strong class="text-pink-400">L − ε</strong> y <strong class="text-pink-400">L + ε</strong>.
+                            </p>
+                            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-2">
+                                <div class="flex justify-between text-xs font-bold">
+                                    <span>Ajustar Tolerancia (ε y δ):</span>
+                                    <span id="epsDeltaLabel" class="text-amber-400">Tubo Medio</span>
+                                </div>
+                                <input type="range" id="epsDeltaSlider" min="0.35" max="1.0" step="0.05" value="0.75" class="w-full h-2 bg-slate-600 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="lg:col-span-7 bg-slate-800 rounded-xl p-4 border border-slate-700 flex flex-col items-center">
+                            <svg id="epsDeltaSvg" viewBox="0 0 420 270" class="w-full max-w-lg h-64"></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- BLOQUE D: LA REGLA DE ORO Y LABORATORIO DE CAMINOS EN (0,0)     -->
+                <!-- =============================================================== -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 space-y-6">
+                    <div>
+                        <div class="inline-block bg-rose-100 text-rose-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+                            ¡Cuidado en los Exámenes! Diferencia Clave vs. Cálculo Diferencial
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-slate-800">3. La Prueba de las Trayectorias: ¿Cuándo NO existe un límite?</h3>
+                        <p class="text-slate-700 text-sm md:text-base leading-relaxed mt-2">
+                            En una variable bastaba con verificar que el límite por la izquierda y por la derecha coincidieran. Pero en dos variables, <span class="math-serif font-bold">(<i>x, y</i>) → (<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>)</span> exige que la función se aproxime al <strong>mismo valor <i>L</i> por CUALQUIER dirección o camino imaginable</strong> (rectas, parábolas, cúbicas, espirales).
+                        </p>
+                        <div class="bg-rose-50 border-l-4 border-rose-600 p-4 rounded-r-xl mt-3 text-sm text-rose-950 font-medium">
+                            <strong>Regla de Oro:</strong> Si encuentras <strong>dos caminos distintos</strong> que al acercarse a <span class="math-serif italic">(x<sub>0</sub>, y<sub>0</sub>)</span> llegan a valores límite diferentes (<span class="math-serif"><i>L</i><sub>1</sub> ≠ <i>L</i><sub>2</sub></span>), entonces <strong>el límite NO existe</strong>. (Nota: Los límites de varias variables conservan las mismas propiedades de suma, resta, producto y cociente del Teorema 1.2 de Cálculo Diferencial).
+                        </div>
+                    </div>
+
+                    <!-- SIMULADOR 2: DETECTOR DE LÍMITES POR TRAYECTORIAS EN (0,0) -->
+                    <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-6">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 pb-4">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-tecnm-blue">Simulador Interactivo 2: Cazador de Límites en (0, 0)</span>
+                                <h4 class="text-lg font-extrabold text-slate-800">Selecciona una función del libro y ponla a prueba por distintos caminos:</h4>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Selección de Función del Libro -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button onclick="setLimitCase('case1')" id="btn-lim-case1" class="p-3.5 rounded-xl border-2 text-left transition-all bg-white border-slate-200 hover:border-slate-300">
+                                <div class="text-[11px] font-bold uppercase text-emerald-700">Ejemplo 2 / 3 (Sí Existe)</div>
+                                <div class="math-serif text-lg font-bold text-slate-900 mt-1"><i>f(x,y)</i> = 5<i>x</i><sup>2</sup><i>y</i> / (<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>)</div>
+                                <div class="text-xs text-slate-500 mt-1">Todos los caminos llevan a <i>L</i> = 0.</div>
+                            </button>
+                            <button onclick="setLimitCase('case2')" id="btn-lim-case2" class="p-3.5 rounded-xl border-2 text-left transition-all bg-white border-slate-200 hover:border-slate-300">
+                                <div class="text-[11px] font-bold uppercase text-amber-700">Figura 13.22 (No Existe: ∞)</div>
+                                <div class="math-serif text-lg font-bold text-slate-900 mt-1"><i>f(x,y)</i> = 1 / (<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>)</div>
+                                <div class="text-xs text-slate-500 mt-1">Crece sin tope (+∞) en (0,0).</div>
+                            </button>
+                            <button onclick="setLimitCase('case3')" id="btn-lim-case3" class="p-3.5 rounded-xl border-2 text-left transition-all bg-tecnm-blue text-white border-tecnm-blue shadow-md">
+                                <div class="text-[11px] font-bold uppercase text-amber-300">Ejemplo 4 (No Existe: Caminos)</div>
+                                <div class="math-serif text-lg font-bold mt-1"><i>f(x,y)</i> = [ (<i>x</i><sup>2</sup> − <i>y</i><sup>2</sup>) / (<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>) ]<sup>2</sup></div>
+                                <div class="text-xs text-slate-200 mt-1">Depende de la trayectoria elegida.</div>
+                            </button>
+                        </div>
+
+                        <!-- Selector de Camino / Trayectoria hacia (0,0) -->
+                        <div>
+                            <div class="text-xs font-bold uppercase text-slate-500 mb-2">Elige la trayectoria (camino en el plano XY) para acercarte a (0, 0):</div>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setPathRoute('y0')" id="btn-path-y0" class="path-btn bg-pink-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm">
+                                    Camino 1: Eje X (<i>y</i> = 0)
+                                </button>
+                                <button onclick="setPathRoute('x0')" id="btn-path-x0" class="path-btn bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-100">
+                                    Camino 2: Eje Y (<i>x</i> = 0)
+                                </button>
+                                <button onclick="setPathRoute('yx')" id="btn-path-yx" class="path-btn bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-100">
+                                    Camino 3: Diagonal (<i>y</i> = <i>x</i>)
+                                </button>
+                                <button onclick="setPathRoute('y2x')" id="btn-path-y2x" class="path-btn bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-100">
+                                    Camino 4: Recta (<i>y</i> = 2<i>x</i>)
+                                </button>
+                                <button onclick="setPathRoute('yx2')" id="btn-path-yx2" class="path-btn bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-100">
+                                    Camino 5: Parábola (<i>y</i> = <i>x</i><sup>2</sup>)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Panel Visual: Radar 2D de Trayectorias + Pizarrón Algebraico -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                            <div class="lg:col-span-5 bg-white p-4 rounded-xl border border-slate-200 flex flex-col items-center shadow-sm">
+                                <div class="text-xs font-bold text-slate-500 mb-2">Radar de Aproximación hacia (0, 0) en el Plano XY</div>
+                                <svg id="pathRadarSvg" viewBox="0 0 280 240" class="w-full max-w-xs h-56"></svg>
+                            </div>
+                            <div class="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                                <div class="flex items-center justify-between border-b pb-3">
+                                    <span id="pathCaseTitle" class="text-xs font-extrabold uppercase tracking-wider text-book-pink">Sustitución Algebraica sobre el Camino</span>
+                                    <span id="pathLimitBadge" class="text-xs font-extrabold px-3 py-1 rounded-full bg-rose-100 text-rose-800">El límite NO existe</span>
+                                </div>
+                                <div id="pathMathSteps" class="space-y-3 text-sm md:text-base text-slate-800"></div>
+                                <div id="pathConclusionBox" class="p-3.5 rounded-xl bg-slate-100 text-xs md:text-sm text-slate-700 border border-slate-200"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- BLOQUE E: CONTINUIDAD, DISCONTINUIDADES Y TEOREMAS 13.1 / 13.2  -->
+                <!-- =============================================================== -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 space-y-8">
+                    <div>
+                        <h3 class="text-2xl font-extrabold text-book-pink">4. Continuidad de una Función de Dos y Tres Variables</h3>
+                        <p class="text-slate-700 text-sm md:text-base leading-relaxed mt-2">
+                            En Cálculo Diferencial aprendiste que una curva es <strong>continua</strong> si puedes dibujarla sin despegar el lápiz del papel. En dos variables, una función <span class="math-serif italic">z = f(x, y)</span> es <strong>continua</strong> si su superficie es una sábana íntegra, sin agujeros de alfiler, sin rasgaduras ni explosiones al infinito. Matemáticamente, esto significa que el límite se puede calcular por simple <strong>sustitución directa</strong>:
+                        </p>
+                    </div>
+
+                    <!-- Definición Formal de Continuidad y Ejemplo de Sustitución Directa -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                        <div class="lg:col-span-7 border-2 border-sky-400 rounded-xl overflow-hidden flex flex-col justify-between">
+                            <div class="bg-sky-50 px-5 py-2.5 border-b border-sky-300 font-bold text-xs uppercase tracking-wider text-slate-800">
+                                Definición de Continuidad de una Función de Dos Variables
+                            </div>
+                            <div class="p-5 bg-white space-y-3 text-sm text-slate-700 flex-1 flex flex-col justify-center">
+                                <p>Una función <span class="math-serif italic">f</span> de dos variables es <strong>continua en un punto <span class="math-serif">(x<sub>0</sub>, y<sub>0</sub>)</span></strong> de una región abierta <span class="math-serif italic">R</span> si <span class="math-serif italic">f(x<sub>0</sub>, y<sub>0</sub>)</span> está definida y es igual al límite cuando <span class="math-serif italic">(x, y) → (x<sub>0</sub>, y<sub>0</sub>)</span>:</p>
+                                <div class="bg-slate-50 py-3 px-4 rounded-xl border border-slate-200 text-center math-serif text-xl font-bold text-slate-900">
+                                    <span class="inline-flex flex-col items-center mr-2 align-middle">
+                                        <span>lím</span>
+                                        <span class="text-[11px] font-normal">(<i>x, y</i>) → (<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>)</span>
+                                    </span>
+                                    <i>f</i>(<i>x, y</i>) = <i>f</i>(<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>)
+                                </div>
+                                <p class="text-xs text-slate-500"><strong>Nota sobre Puntos Frontera:</strong> Igual que los límites unilaterales del Capítulo 1, la continuidad se extiende a puntos frontera permitiendo acercarse a <span class="math-serif italic">(x<sub>0</sub>, y<sub>0</sub>)</span> únicamente por trayectorias dentro de la región <span class="math-serif italic">R</span>.</p>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-5 bg-emerald-50/70 rounded-xl p-5 border border-emerald-200 flex flex-col justify-between">
+                            <div>
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-200/80 px-2.5 py-0.5 rounded">Ejemplo 2 del Libro: Sustitución Directa</span>
+                                <h4 class="font-bold text-slate-800 text-base mt-2">¿Es continua en el punto (1, 2)?</h4>
+                                <p class="text-xs text-slate-600 mt-1">En el punto <span class="math-serif">(1, 2)</span> el denominador no se hace cero, así que sustituimos <span class="math-serif"><i>x</i> = 1, <i>y</i> = 2</span> directamente:</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-emerald-200 my-3 text-center math-serif text-base md:text-lg font-bold text-slate-800">
+                                <i>f</i>(1, 2) = <span class="inline-block align-middle text-center"><span class="border-b border-slate-800 block px-2">5(1)<sup>2</sup>(2)</span><span>1<sup>2</sup> + 2<sup>2</sup></span></span> = <span class="inline-block align-middle text-center"><span class="border-b border-slate-800 block px-2">10</span><span>5</span></span> = <span class="text-emerald-700 text-xl">2</span>
+                            </div>
+                            <div class="text-xs text-emerald-900 font-semibold">
+                                ✔ Como el límite coincide con <i>f</i>(1, 2) = 2, la función es <strong>continua en (1, 2)</strong>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SIMULADOR 3: DISCONTINUIDAD REMOVIBLE (EVITABLE) VS INEVITABLE -->
+                    <div class="bg-slate-900 text-white rounded-2xl p-6 space-y-5">
+                        <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-700 pb-4">
+                            <div>
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">Simulador Interactivo 3: Taller de Superficies en (0, 0)</span>
+                                <h4 class="text-lg font-bold">Discontinuidad Removible (Evitable) vs. Inevitable (No Removible)</h4>
+                            </div>
+                            <button onclick="togglePatchHole()" id="patchBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all">
+                                🔧 Parchar agujero: Redefinir f(0,0) = 0
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Tarjeta Izquierda: Removible -->
+                            <div class="bg-slate-800 rounded-xl p-5 border border-slate-700 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-extrabold uppercase text-emerald-400">1. Discontinuidad Removible (Evitable)</span>
+                                    <span id="removableStatusBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold">Agujero en (0,0)</span>
+                                </div>
+                                <div class="math-serif text-lg font-bold text-white">
+                                    <i>f</i>(<i>x, y</i>) = <span class="inline-block align-middle text-center text-sm"><span class="border-b border-white block px-1">5<i>x</i><sup>2</sup><i>y</i></span><span><i>x</i><sup>2</sup> + <i>y</i><sup>2</sup></span></span>
+                                </div>
+                                <svg id="removableSvg" viewBox="0 0 280 140" class="w-full h-36 bg-slate-900/80 rounded-lg border border-slate-700"></svg>
+                                <p id="removableDesc" class="text-xs text-slate-300 leading-relaxed">
+                                    No está definida en (0,0) porque da 0/0. Pero como <strong>el límite en (0,0) SÍ existe y vale 0</strong>, la sábana está intacta salvo por un huequito puntual. ¡Haz clic arriba en "Parchar agujero" para volverla continua!
+                                </p>
+                            </div>
+
+                            <!-- Tarjeta Derecha: Inevitable -->
+                            <div class="bg-slate-800 rounded-xl p-5 border border-slate-700 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-extrabold uppercase text-rose-400">2. Discontinuidad Inevitable (No Removible)</span>
+                                    <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-bold">Ruptura Total</span>
+                                </div>
+                                <div class="math-serif text-lg font-bold text-white">
+                                    <i>f</i>(<i>x, y</i>) = <span class="inline-block align-middle text-center text-sm"><span class="border-b border-white block px-1">(<i>x</i><sup>2</sup> − <i>y</i><sup>2</sup>)<sup>2</sup></span><span>(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>)<sup>2</sup></span></span>
+                                </div>
+                                <svg viewBox="0 0 280 140" class="w-full h-36 bg-slate-900/80 rounded-lg border border-slate-700">
+                                    <!-- Sábana desgarrada a dos niveles -->
+                                    <path d="M 25 45 L 125 45" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+                                    <path d="M 155 45 L 255 45" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+                                    <path d="M 45 100 L 125 100" stroke="#f43f5e" stroke-width="4" stroke-linecap="round"/>
+                                    <path d="M 155 100 L 235 100" stroke="#f43f5e" stroke-width="4" stroke-linecap="round"/>
+                                    <line x1="140" y1="20" x2="140" y2="125" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4,3"/>
+                                    <text x="65" y="35" font-size="10" fill="#38bdf8" font-weight="bold">Por ejes (z = 1)</text>
+                                    <text x="65" y="118" font-size="10" fill="#f43f5e" font-weight="bold">Por y = x (z = 0)</text>
+                                    <text x="140" y="75" text-anchor="middle" font-size="11" fill="#fbbf24" font-weight="bold">⚡ Desgarre en (0,0)</text>
+                                </svg>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Como <strong>el límite en (0,0) NO existe</strong> (por unos caminos la altura vale 1 y por otros vale 0), la superficie sufre un acantilado o fractura en el origen. Ningún punto individual puede rellenar ese salto.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Teoremas 13.1 y 13.2 + Figuras 13.24 y 13.25 + Extensión a 3 Variables -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                        <!-- Teorema 13.1 -->
+                        <div class="border-2 border-sky-400 rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm">
+                            <div class="bg-sky-50 px-6 py-3.5 border-b border-sky-300 font-bold text-xs md:text-sm uppercase tracking-wider text-slate-800">
+                                Teorema 13.1: Funciones Continuas de Dos Variables
+                            </div>
+                            <div class="p-6 bg-white space-y-5 text-sm md:text-base text-slate-700 flex-1 flex flex-col justify-between">
+                                <p>
+                                    Si <span class="math-serif italic text-lg">k</span> es un número real y <span class="math-serif italic text-lg">f</span> y <span class="math-serif italic text-lg">g</span> son continuas en <span class="math-serif italic text-lg">(x<sub>0</sub>, y<sub>0</sub>)</span>, entonces también son continuas:
+                                </p>
+                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3.5 text-sm md:text-base">
+                                    <div class="flex flex-wrap items-center justify-between border-b border-slate-200/80 pb-2.5 gap-2">
+                                        <span class="font-bold text-slate-800">1. Múltiplo escalar:</span>
+                                        <span class="math-serif italic text-lg font-bold text-tecnm-blue">k · f(x, y)</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center justify-between border-b border-slate-200/80 pb-2.5 gap-2">
+                                        <span class="font-bold text-slate-800">2. Suma y diferencia:</span>
+                                        <span class="math-serif italic text-lg font-bold text-tecnm-blue">f(x, y) &nbsp;±&nbsp; g(x, y)</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center justify-between border-b border-slate-200/80 pb-2.5 gap-2">
+                                        <span class="font-bold text-slate-800">3. Producto:</span>
+                                        <span class="math-serif italic text-lg font-bold text-tecnm-blue">f(x, y) · g(x, y)</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center justify-between gap-2">
+                                        <span class="font-bold text-slate-800">4. Cociente:</span>
+                                        <span class="math-serif text-lg font-bold text-tecnm-blue whitespace-nowrap">
+                                            <i>f(x, y)</i> / <i>g(x, y)</i>, &nbsp;<span class="font-sans text-xs font-semibold text-slate-600">si</span> &nbsp;<i>g</i>(<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>) ≠ 0
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                                    <strong>Conclusión clave:</strong> Toda función <strong>polinomial</strong> es continua en todo el plano <span class="italic">xy</span>, y toda función <strong>racional</strong> es continua en todo punto de su dominio (donde el denominador no sea cero).
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Teorema 13.2 -->
+                        <div class="border-2 border-sky-400 rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm">
+                            <div class="bg-sky-50 px-6 py-3.5 border-b border-sky-300 font-bold text-xs md:text-sm uppercase tracking-wider text-slate-800">
+                                Teorema 13.2: Continuidad de una Función Compuesta
+                            </div>
+                            <div class="p-6 bg-white space-y-5 text-sm md:text-base text-slate-700 flex-1 flex flex-col justify-between">
+                                <p>
+                                    Si <span class="math-serif italic text-lg">h</span> es continua en <span class="math-serif italic text-lg">(x<sub>0</sub>, y<sub>0</sub>)</span> y <span class="math-serif italic text-lg">g</span> (de una variable) es continua en <span class="math-serif italic text-lg">h(x<sub>0</sub>, y<sub>0</sub>)</span>, entonces la composición <span class="math-serif italic text-lg">(g ∘ h)(x, y) = g(h(x, y))</span> es continua en <span class="math-serif italic text-lg">(x<sub>0</sub>, y<sub>0</sub>)</span>:
+                                </p>
+
+                                <!-- Ecuación de límite con subíndice apilado abajo para evitar amontonamiento -->
+                                <div class="bg-slate-50 py-5 px-6 rounded-xl border border-slate-200 flex items-center justify-center">
+                                    <div class="math-serif text-xl md:text-2xl font-bold text-slate-900 flex items-center gap-3 flex-wrap justify-center">
+                                        <div class="inline-flex flex-col items-center leading-none">
+                                            <span>lím</span>
+                                            <span class="text-xs font-normal text-slate-600 mt-1 whitespace-nowrap">(<i>x, y</i>) → (<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>)</span>
+                                        </div>
+                                        <span><i>g</i>(<i>h</i>(<i>x, y</i>)) &nbsp;=&nbsp; <i>g</i>(<i>h</i>(<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>))</span>
+                                    </div>
+                                </div>
+
+                                <!-- Ejemplos de las Figuras 13.24 y 13.25 bien espaciados -->
+                                <div class="space-y-2.5 text-xs md:text-sm text-slate-600">
+                                    <p>Gracias a este teorema, las superficies de las figuras <strong>13.24</strong> y <strong>13.25</strong> son continuas en <strong>todo punto del plano XY</strong>:</p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                        <div class="bg-slate-50 px-3.5 py-2.5 rounded-lg border border-slate-200 text-center">
+                                            <div class="text-[10px] font-bold uppercase text-slate-400 mb-1">Figura 13.24</div>
+                                            <div class="math-serif text-base font-bold text-slate-800">
+                                                <i>f(x, y)</i> = <span class="inline-block align-middle text-center text-xs mr-0.5"><span class="border-b border-slate-800 block px-1">1</span><span>2</span></span> sen(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>)
+                                            </div>
+                                        </div>
+                                        <div class="bg-slate-50 px-3.5 py-2.5 rounded-lg border border-slate-200 text-center">
+                                            <div class="text-[10px] font-bold uppercase text-slate-400 mb-1">Figura 13.25</div>
+                                            <div class="math-serif text-base font-bold text-slate-800">
+                                                <i>f(x, y)</i> = cos(<i>y</i><sup>2</sup>) · <i>e</i><sup>−√(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>)</sup>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extensión a 3 Variables (Cierre de 4.3 con ecuación amplia y desahogada) -->
+                    <div class="bg-purple-50/70 rounded-2xl p-6 md:p-7 border border-purple-200 flex flex-col lg:flex-row items-center justify-between gap-6">
+                        <div class="space-y-2 max-w-2xl">
+                            <span class="text-xs font-bold uppercase tracking-wider text-purple-800">Extensión a 3 Variables (Figura 13.28)</span>
+                            <h4 class="text-lg md:text-xl font-extrabold text-slate-800">Continuidad en el Espacio Tridimensional</h4>
+                            <p class="text-sm md:text-base text-slate-700 leading-relaxed">
+                                Una función <span class="math-serif italic text-lg">f(x, y, z)</span> es continua en un punto <span class="math-serif italic text-lg">(x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>)</span> dentro de una región abierta <span class="math-serif italic text-lg">R</span> (definida por esferas abiertas de radio δ) si su límite al aproximarse por cualquier trayectoria en 3D coincide con su evaluación directa:
+                            </p>
+                        </div>
+                        <div class="bg-white px-7 py-5 rounded-2xl border-2 border-purple-200 shadow-sm flex items-center justify-center shrink-0">
+                            <div class="math-serif text-xl md:text-2xl font-bold text-slate-900 flex items-center gap-3.5">
+                                <div class="inline-flex flex-col items-center leading-none">
+                                    <span>lím</span>
+                                    <span class="text-xs font-normal text-purple-800 mt-1.5 whitespace-nowrap">(<i>x, y, z</i>) → (<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>, <i>z</i><sub>0</sub>)</span>
+                                </div>
+                                <span class="whitespace-nowrap"><i>f</i>(<i>x, y, z</i>) &nbsp;=&nbsp; <i>f</i>(<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>, <i>z</i><sub>0</sub>)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SCRIPTS INTERACTIVOS GLOBALES (4.1, 4.2 y 4.3)                            -->
+    <!-- ========================================================================= -->
+    <script>
+        // -------------------------------------------------------------------------
+        // 1. NAVEGACIÓN ENTRE PESTAÑAS (OCULTA LAS DEMÁS AL SELECCIONAR UNA)
+        // -------------------------------------------------------------------------
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            const target = document.getElementById('tab-' + tabId);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.tab-nav-btn').forEach(btn => {
+                btn.classList.remove('bg-tecnm-blue', 'text-white', 'shadow-md', 'font-semibold');
+                btn.classList.add('text-slate-700', 'hover:bg-slate-200/70', 'font-medium');
+            });
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-700', 'hover:bg-slate-200/70', 'font-medium');
+                activeBtn.classList.add('bg-tecnm-blue', 'text-white', 'shadow-md', 'font-semibold');
+            }
+        };
+
+        // -------------------------------------------------------------------------
+        // 2. LÓGICA DEL SUBTEMA 4.1: LABORATORIO DE ANALOGÍAS ANIMADAS
+        // -------------------------------------------------------------------------
+        const analogies = {
+            freidora: {
+                title: "Cocinando en la Freidora de Aire",
+                desc: "Para obtener la textura perfecta (z), ajustas simultáneamente la Temperatura (x) y el Tiempo (y). Entre 2200 y 3400 unidades térmicas queda cocido a la perfección.",
+                formula: "<i>z</i> = <i>f</i>(Temperatura, Tiempo) = <i>x · y</i>",
+                labelZ: "Nivel de Cocción (z)",
+                x: { label: "Temperatura (x)", min: 100, max: 220, step: 5, val: 180, unit: "°C" },
+                y: { label: "Tiempo (y)", min: 5, max: 25, step: 1, val: 15, unit: " min" },
+                calc: (x, y) => x * y,
+                renderSVG: (x, y, z) => {
+                    let potatoColor = "#fef08a"; // Crudo
+                    let smokeOpacity = 0;
+                    if (z >= 2200 && z <= 3400) {
+                        potatoColor = "#f59e0b"; // Dorado perfecto
+                    } else if (z > 3400) {
+                        potatoColor = "#451a03"; // Quemado
+                        smokeOpacity = 0.75;
+                    }
+                    const pulseSpeed = Math.max(0.4, 2.2 - (x / 120)).toFixed(2);
+                    return `
+                    <svg viewBox="0 0 120 110" class="w-full h-full">
+                        <defs>
+                            <linearGradient id="fryerBody" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#334155"/>
+                                <stop offset="100%" stop-color="#0f172a"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Humo animado si se quema -->
+                        <g style="opacity:${smokeOpacity}">
+                            <circle cx="48" cy="18" r="8" fill="#94a3b8" style="animation: floatSmoke 1.6s infinite ease-in-out;"/>
+                            <circle cx="68" cy="14" r="10" fill="#cbd5e1" style="animation: floatSmoke 2.1s infinite ease-in-out;"/>
+                        </g>
+                        <!-- Rayos de calor animados -->
+                        <g style="animation: heatPulse ${pulseSpeed}s infinite ease-in-out;">
+                            <path d="M 32 24 Q 38 14 44 24" stroke="#ef4444" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            <path d="M 76 24 Q 82 14 88 24" stroke="#ef4444" stroke-width="3" stroke-linecap="round" fill="none"/>
+                        </g>
+                        <!-- Cuerpo de la Freidora -->
+                        <rect x="25" y="36" width="70" height="60" rx="10" fill="url(#fryerBody)"/>
+                        <rect x="20" y="30" width="80" height="12" rx="5" fill="#1e293b"/>
+                        <rect x="46" y="46" width="28" height="9" rx="3" fill="#020617"/>
+                        <circle cx="36" cy="50" r="3" fill="${z >= 2200 && z <= 3400 ? '#10b981' : (z > 3400 ? '#ef4444' : '#38bdf8')}"/>
+                        <!-- Alimento / Flauta / Papa -->
+                        <g transform="rotate(14, 60, 35)">
+                            <rect x="52" y="10" width="16" height="44" rx="6" fill="${potatoColor}" stroke="#78350f" stroke-width="1.5"/>
+                            <rect x="55" y="13" width="4" height="36" rx="2" fill="#ffffff" opacity="0.35"/>
+                        </g>
+                    </svg>`;
+                },
+                formatResult: (z) => {
+                    if (z < 2200) return `<span class="text-sky-600">Crudo ❄️ (${z} u)</span>`;
+                    if (z <= 3400) return `<span class="text-amber-500">Cocido Correctamente 🌟 (${z} u)</span>`;
+                    return `<span class="text-red-600">Quemado 🔥 (${z} u)</span>`;
+                }
+            },
+            auto: {
+                title: "Rendimiento de Combustible del Automóvil",
+                desc: "El rendimiento en carretera (z) depende simultáneamente de la Velocidad de crucero (x) y de la Presión de las llantas (y).",
+                formula: "<i>z</i> = <i>f</i>(Velocidad, Presión)",
+                labelZ: "Rendimiento Estimado (z)",
+                x: { label: "Velocidad (x)", min: 40, max: 140, step: 5, val: 90, unit: " km/h" },
+                y: { label: "Presión de llantas (y)", min: 20, max: 35, step: 1, val: 30, unit: " PSI" },
+                calc: (x, y) => {
+                    const penaltyV = Math.pow((x - 85) / 22, 2);
+                    const bonusP = (y - 20) * 0.25;
+                    return Math.max(6, (15.5 - penaltyV + bonusP));
+                },
+                renderSVG: (x, y, z) => {
+                    const wheelDur = Math.max(0.18, 1.5 - (x / 100)).toFixed(2);
+                    return `
+                    <svg viewBox="0 0 140 100" class="w-full h-full">
+                        <g style="animation: carBounce ${wheelDur}s infinite ease-in-out;">
+                            <path d="M 20 65 L 30 45 L 58 36 L 95 42 L 118 65 Z" fill="#1d4ed8"/>
+                            <polygon points="36,45 58,39 88,43 60,46" fill="#bae6fd"/>
+                        </g>
+                        <!-- Llanta Izquierda girando -->
+                        <g style="transform-origin: 42px 68px; animation: spinWheel ${wheelDur}s linear infinite;">
+                            <circle cx="42" cy="68" r="11" fill="#0f172a"/>
+                            <circle cx="42" cy="68" r="5" fill="#94a3b8"/>
+                            <line x1="31" y1="68" x2="53" y2="68" stroke="#e2e8f0" stroke-width="2"/>
+                            <line x1="42" y1="57" x2="42" y2="79" stroke="#e2e8f0" stroke-width="2"/>
+                        </g>
+                        <!-- Llanta Derecha girando -->
+                        <g style="transform-origin: 96px 68px; animation: spinWheel ${wheelDur}s linear infinite;">
+                            <circle cx="96" cy="68" r="11" fill="#0f172a"/>
+                            <circle cx="96" cy="68" r="5" fill="#94a3b8"/>
+                            <line x1="85" y1="68" x2="107" y2="68" stroke="#e2e8f0" stroke-width="2"/>
+                            <line x1="96" y1="57" x2="96" y2="79" stroke="#e2e8f0" stroke-width="2"/>
+                        </g>
+                        <line x1="10" y1="80" x2="130" y2="80" stroke="#64748b" stroke-width="3" stroke-dasharray="8,6"/>
+                    </svg>`;
+                },
+                formatResult: (z) => `<span class="text-emerald-600">${z.toFixed(1)} km/L ⛽</span>`
+            },
+            fabrica: {
+                title: "Costos de Producción en Planta Industrial",
+                desc: "Como Ingeniero Industrial, calculas el costo total del lote (z) en función de las Horas-Máquina activas (x) y el número de Operadores (y).",
+                formula: "<i>z</i> = Costos Fijos + <i>C</i><sub>maq</sub>(<i>x</i>) + <i>C</i><sub>obrero</sub>(<i>y</i>)",
+                labelZ: "Costo Total de Producción (z)",
+                x: { label: "Horas Máquina (x)", min: 1, max: 24, step: 1, val: 8, unit: " h" },
+                y: { label: "Operadores en línea (y)", min: 1, max: 20, step: 1, val: 10, unit: " pers." },
+                calc: (x, y) => 1500 + (x * 450) + (y * 280),
+                renderSVG: (x, y, z) => {
+                    const beltSpeed = Math.max(0.5, 2.5 - (y * 0.08)).toFixed(2);
+                    return `
+                    <svg viewBox="0 0 140 100" class="w-full h-full">
+                        <!-- Banda transportadora -->
+                        <rect x="15" y="68" width="110" height="12" rx="6" fill="#475569"/>
+                        <circle cx="25" cy="74" r="4" fill="#0f172a"/>
+                        <circle cx="70" cy="74" r="4" fill="#0f172a"/>
+                        <circle cx="115" cy="74" r="4" fill="#0f172a"/>
+                        <!-- Caja moviéndose -->
+                        <g style="animation: boxSlide ${beltSpeed}s infinite ease-in-out;">
+                            <rect x="56" y="44" width="28" height="24" rx="2" fill="#d97706" stroke="#78350f" stroke-width="1.5"/>
+                            <line x1="56" y1="54" x2="84" y2="54" stroke="#fef3c7" stroke-width="2"/>
+                        </g>
+                        <!-- Moneda de costo -->
+                        <circle cx="70" cy="22" r="14" fill="#10b981" stroke="#047857" stroke-width="2"/>
+                        <text x="70" y="27" text-anchor="middle" font-size="15" font-weight="bold" fill="white">$</text>
+                    </svg>`;
+                },
+                formatResult: (z) => `<span class="text-emerald-700">$${z.toLocaleString()} MXN</span>`
+            }
+        };
+
+        let currentAnalogy = 'freidora';
+
+        window.setAnalogy = function(key) {
+            currentAnalogy = key;
+            const data = analogies[key];
+            document.getElementById('anaTitle').innerText = data.title;
+            document.getElementById('anaDesc').innerText = data.desc;
+            document.getElementById('anaFormula').innerHTML = data.formula;
+            document.getElementById('labelZ').innerText = data.labelZ;
+
+            const sX = document.getElementById('sliderX');
+            const sY = document.getElementById('sliderY');
+            document.getElementById('labelX').innerText = data.x.label;
+            sX.min = data.x.min; sX.max = data.x.max; sX.step = data.x.step; sX.value = data.x.val;
+            document.getElementById('labelY').innerText = data.y.label;
+            sY.min = data.y.min; sY.max = data.y.max; sY.step = data.y.step; sY.value = data.y.val;
+
+            document.querySelectorAll('.analogy-btn').forEach(btn => {
+                btn.classList.remove('bg-tecnm-blue', 'text-white', 'border-tecnm-blue', 'shadow-md');
+                btn.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+            });
+            const active = document.getElementById('btn-' + key);
+            if (active) {
+                active.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+                active.classList.add('bg-tecnm-blue', 'text-white', 'border-tecnm-blue', 'shadow-md');
+            }
+            window.updateAnalogy();
+        };
+
+        window.updateAnalogy = function() {
+            const data = analogies[currentAnalogy];
+            const x = parseFloat(document.getElementById('sliderX').value);
+            const y = parseFloat(document.getElementById('sliderY').value);
+            document.getElementById('valX').innerText = x + data.x.unit;
+            document.getElementById('valY').innerText = y + data.y.unit;
+            const z = data.calc(x, y);
+            document.getElementById('valZ').innerHTML = data.formatResult(z);
+            document.getElementById('svgCanvas').innerHTML = data.renderSVG(x, y, z);
+        };
+
+        // -------------------------------------------------------------------------
+        // 3. LÓGICA DEL SUBTEMA 4.2: SIMULADOR 3D Y 2D DE LA TRAZA (ELIPSE)
+        // -------------------------------------------------------------------------
+        window.setTraceZ = function(val) {
+            const slider = document.getElementById('traceZSlider');
+            slider.value = val;
+            window.renderTraceSimulator();
+        };
+
+        window.renderTraceSimulator = function() {
+            const z = parseFloat(document.getElementById('traceZSlider').value);
+            document.getElementById('traceZVal').innerText = z.toFixed(1);
+
+            const rhs = Math.max(0, 16 - z * z); // 4x^2 + y^2 = 16 - z^2
+            const aSemi = Math.sqrt(rhs / 4);    // Semieje X
+            const bSemi = Math.sqrt(rhs);        // Semieje Y
+
+            // Dibujar Domo 3D en perspectiva
+            const cyPlane = 175 - (z / 4) * 105;
+            const rx3D = (bSemi / 4) * 95;
+            const ry3D = (aSemi / 2) * 32;
+
+            document.getElementById('dome3DSvg').innerHTML = `
+                <!-- Ejes 3D etiquetados -->
+                <line x1="180" y1="175" x2="180" y2="20" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="180" y1="175" x2="330" y2="195" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="180" y1="175" x2="55" y2="230" stroke="#94a3b8" stroke-width="2"/>
+                <text x="186" y="28" fill="#38bdf8" font-size="11" font-weight="bold">Eje Z (Altura)</text>
+                <text x="275" y="212" fill="#38bdf8" font-size="11" font-weight="bold">Eje Y</text>
+                <text x="25" y="242" fill="#38bdf8" font-size="11" font-weight="bold">Eje X</text>
+
+                <!-- Base del domo en z=0 -->
+                <ellipse cx="180" cy="175" rx="95" ry="32" fill="#0ea5e9" fill-opacity="0.15" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,3"/>
+                <!-- Silueta del Domo -->
+                <path d="M 85 175 Q 180 -35 275 175" fill="#0284c7" fill-opacity="0.28" stroke="#38bdf8" stroke-width="2"/>
+
+                <!-- Plano cortante z = constante -->
+                <polygon points="${180 - 115},${cyPlane + 16} ${180 + 95},${cyPlane + 16} ${180 + 115},${cyPlane - 16} ${180 - 95},${cyPlane - 16}" fill="#db2777" fill-opacity="0.22" stroke="#f472b6" stroke-width="1"/>
+                <!-- Elipse de intersección (La Traza) -->
+                <ellipse cx="180" cy="${cyPlane}" rx="${rx3D}" ry="${ry3D}" fill="#db2777" fill-opacity="0.45" stroke="#f472b6" stroke-width="2.5"/>
+                <circle cx="180" cy="${cyPlane}" r="3.5" fill="#ffffff"/>
+                <text x="190" y="${cyPlane - 6}" fill="#f9a8d4" font-size="11" font-weight="bold">(0, 0, ${z.toFixed(1)})</text>
+            `;
+
+            // Dibujar Proyección 2D en el Plano XY
+            const scale2D = 26; // 1 unidad = 26 px
+            const rx2D = aSemi * scale2D;
+            const ry2D = bSemi * scale2D;
+
+            document.getElementById('ellipse2DSvg').innerHTML = `
+                <!-- Cuadrícula suave -->
+                <line x1="20" y1="130" x2="340" y2="130" stroke="#64748b" stroke-width="1.8"/>
+                <line x1="180" y1="15" x2="180" y2="245" stroke="#64748b" stroke-width="1.8"/>
+                <text x="315" y="122" fill="#cbd5e1" font-size="11" font-weight="bold">Eje X</text>
+                <text x="188" y="25" fill="#cbd5e1" font-size="11" font-weight="bold">Eje Y</text>
+
+                <!-- Elipse 2D -->
+                <ellipse cx="180" cy="130" rx="${rx2D}" ry="${ry2D}" fill="#db2777" fill-opacity="0.25" stroke="#f472b6" stroke-width="2.5"/>
+                <!-- Cotas de semiejes -->
+                <line x1="180" y1="130" x2="${180 + rx2D}" y2="130" stroke="#fbbf24" stroke-width="2"/>
+                <line x1="180" y1="130" x2="180" y2="${130 - ry2D}" stroke="#34d399" stroke-width="2"/>
+                <circle cx="${180 + rx2D}" cy="130" r="3.5" fill="#fbbf24"/>
+                <circle cx="180" cy="${130 - ry2D}" r="3.5" fill="#34d399"/>
+
+                <text x="${185 + rx2D}" y="146" fill="#fbbf24" font-size="11" font-weight="bold">a = ${aSemi.toFixed(2)}</text>
+                <text x="115" y="${124 - ry2D}" fill="#34d399" font-size="11" font-weight="bold">b = ${bSemi.toFixed(2)}</text>
+            `;
+
+            document.getElementById('traceEquationBox').innerHTML =
+                `En <b>z = ${z.toFixed(1)}</b>: &nbsp; 4<i>x</i>² + <i>y</i>² = ${rhs.toFixed(2)} &nbsp;⇒&nbsp; Semieje horizontal <b>a = √(${(rhs/4).toFixed(2)}) ≈ ${aSemi.toFixed(2)}</b> (Eje X) &nbsp;|&nbsp; Semieje vertical <b>b = √(${rhs.toFixed(2)}) ≈ ${bSemi.toFixed(2)}</b> (Eje Y).`;
+        };
+
+        // -------------------------------------------------------------------------
+        // 4. LÓGICA DEL SUBTEMA 4.3: SIMULADOR 1 (PUNTO INTERIOR VS FRONTERA)
+        // -------------------------------------------------------------------------
+        let regionMode = 'interior'; // 'interior' | 'frontera'
+        let diskBoundary = 'open';   // 'open' | 'closed'
+
+        window.setRegionMode = function(mode) {
+            regionMode = mode;
+            const bInt = document.getElementById('btn-reg-interior');
+            const bFro = document.getElementById('btn-reg-frontera');
+            if (mode === 'interior') {
+                bInt.className = "bg-tecnm-blue text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm transition-all";
+                bFro.className = "bg-white text-slate-700 border border-slate-300 py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-slate-100 transition-all";
+            } else {
+                bFro.className = "bg-tecnm-blue text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm transition-all";
+                bInt.className = "bg-white text-slate-700 border border-slate-300 py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-slate-100 transition-all";
+            }
+            window.renderRegionSimulator();
+        };
+
+        window.setDiskBoundary = function(type) {
+            diskBoundary = type;
+            const bOpen = document.getElementById('btn-disk-open');
+            const bClosed = document.getElementById('btn-disk-closed');
+            if (type === 'open') {
+                bOpen.className = "bg-pink-600 text-white py-2 px-3 rounded-xl text-xs font-bold shadow-sm transition-all";
+                bClosed.className = "bg-white text-slate-700 border border-slate-300 py-2 px-3 rounded-xl text-xs font-bold hover:bg-slate-100 transition-all";
+            } else {
+                bClosed.className = "bg-pink-600 text-white py-2 px-3 rounded-xl text-xs font-bold shadow-sm transition-all";
+                bOpen.className = "bg-white text-slate-700 border border-slate-300 py-2 px-3 rounded-xl text-xs font-bold hover:bg-slate-100 transition-all";
+            }
+            window.renderRegionSimulator();
+        };
+
+        window.renderRegionSimulator = function() {
+            const delta = parseFloat(document.getElementById('deltaRegionSlider').value);
+            document.getElementById('deltaRegionLabel').innerText = `δ = ${delta.toFixed(2)}`;
+
+            const radiusPx = delta * 34;
+            const dashAttr = diskBoundary === 'open' ? 'stroke-dasharray="5,4"' : '';
+
+            // Coordenadas del punto interior (210, 130) y del punto frontera (282, 82)
+            const px = regionMode === 'interior' ? 210 : 282;
+            const py = regionMode === 'interior' ? 130 : 82;
+
+            document.getElementById('regionSvg').innerHTML = `
+                <!-- Ejes X y Y -->
+                <line x1="35" y1="225" x2="395" y2="225" stroke="#64748b" stroke-width="1.8"/>
+                <line x1="55" y1="240" x2="55" y2="15" stroke="#64748b" stroke-width="1.8"/>
+                <text x="402" y="229" font-size="12" font-style="italic" fill="#334155">x</text>
+                <text x="51" y="12" font-size="12" font-style="italic" fill="#334155">y</text>
+
+                <!-- Región R (Forma tipo riñón igual a Figura 13.19) -->
+                <path d="M 95 110 C 75 65, 175 35, 255 65 C 325 90, 345 165, 295 190 C 250 210, 225 165, 185 160 C 140 155, 115 150, 95 110 Z"
+                      fill="#e0f2fe" stroke="#0f172a" stroke-width="2.5" ${diskBoundary === 'open' ? 'stroke-dasharray="6,4"' : ''}/>
+                <text x="140" y="95" font-size="16" font-family="serif" font-style="italic" font-weight="bold" fill="#0369a1">R</text>
+
+                <!-- Disco delta centrado en (x0, y0) -->
+                <circle cx="${px}" cy="${py}" r="${radiusPx}" fill="#fce7f3" fill-opacity="0.78" stroke="#db2777" stroke-width="2" ${dashAttr}/>
+                <line x1="${px}" y1="${py}" x2="${px + radiusPx * 0.7}" y2="${py - radiusPx * 0.7}" stroke="#db2777" stroke-width="1.8"/>
+                <circle cx="${px}" cy="${py}" r="4" fill="#0f172a"/>
+                <text x="${px}" y="${py + radiusPx + 15}" text-anchor="middle" font-size="11" font-weight="bold" fill="#be185d">
+                    ${regionMode === 'interior' ? 'Punto interior (x₀, y₀)' : 'Punto frontera (x₀, y₀)'}
+                </text>
+            `;
+
+            const fb = document.getElementById('regionFeedbackBox');
+            if (regionMode === 'interior') {
+                if (delta <= 0.95) {
+                    fb.className = "p-4 rounded-xl border-l-4 border-emerald-500 bg-emerald-50 text-xs md:text-sm text-slate-700 space-y-1";
+                    fb.innerHTML = `<strong>✔ Punto Interior Comprobado:</strong> Con <span class="math-serif">δ = ${delta.toFixed(2)}</span>, el disco rosa queda <strong>100% contenido dentro de la región <i>R</i></strong>. Basta con que exista al menos un radio δ pequeño que no se salga de <i>R</i> para ser punto interior.`;
+                } else {
+                    fb.className = "p-4 rounded-xl border-l-4 border-amber-500 bg-amber-50 text-xs md:text-sm text-slate-700 space-y-1";
+                    fb.innerHTML = `<strong>💡 Radio δ muy grande:</strong> Aunque con <span class="math-serif">δ = ${delta.toFixed(2)}</span> el disco asoma fuera de <i>R</i>, el punto <strong>sigue siendo un punto interior</strong> porque la definición solo pide que <em>exista algún δ &gt; 0</em> suficientemente pequeño (prueba bajar el slider a δ = 0.50) que quepa completo dentro de <i>R</i>.`;
+                }
+            } else {
+                fb.className = "p-4 rounded-xl border-l-4 border-rose-500 bg-rose-50 text-xs md:text-sm text-slate-700 space-y-1";
+                fb.innerHTML = `<strong>🚧 Punto Frontera Comprobado:</strong> Sin importar qué tan pequeño hagas el radio <span class="math-serif">δ = ${delta.toFixed(2)}</span>, el disco centrado en la orilla <strong>siempre abarca una mitad azul (dentro de <i>R</i>) y una mitad blanca (fuera de <i>R</i>)</strong>.`;
+            }
+        };
+
+        // -------------------------------------------------------------------------
+        // 5. LÓGICA DEL SUBTEMA 4.3: VISUALIZADOR 3D EPSILON-DELTA (FIGURA 13.20)
+        // -------------------------------------------------------------------------
+        window.renderEpsDeltaSimulator = function() {
+            const scale = parseFloat(document.getElementById('epsDeltaSlider').value);
+            const rDisk = scale * 38;
+            const epsPx = scale * 26;
+
+            document.getElementById('epsDeltaLabel').innerText = `δ = ${(scale * 0.5).toFixed(2)}, ε = ${(scale * 0.4).toFixed(2)}`;
+
+            document.getElementById('epsDeltaSvg').innerHTML = `
+                <!-- Ejes 3D -->
+                <line x1="70" y1="210" x2="70" y2="20" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="70" y1="210" x2="380" y2="225" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="70" y1="210" x2="18" y2="255" stroke="#94a3b8" stroke-width="2"/>
+                <text x="76" y="28" fill="#cbd5e1" font-size="12" font-style="italic">z</text>
+                <text x="386" y="228" fill="#cbd5e1" font-size="12" font-style="italic">y</text>
+                <text x="8" y="262" fill="#cbd5e1" font-size="12" font-style="italic">x</text>
+
+                <!-- Marcas L+eps, L, L-eps en el eje Z -->
+                <line x1="65" y1="${105 - epsPx}" x2="75" y2="${105 - epsPx}" stroke="#f472b6" stroke-width="2"/>
+                <line x1="65" y1="105" x2="75" y2="105" stroke="#fbbf24" stroke-width="2"/>
+                <line x1="65" y1="${105 + epsPx}" x2="75" y2="${105 + epsPx}" stroke="#f472b6" stroke-width="2"/>
+                <text x="58" y="${109 - epsPx}" text-anchor="end" fill="#f472b6" font-size="11" font-weight="bold">L + ε</text>
+                <text x="58" y="109" text-anchor="end" fill="#fbbf24" font-size="12" font-weight="bold">L</text>
+                <text x="58" y="${109 + epsPx}" text-anchor="end" fill="#f472b6" font-size="11" font-weight="bold">L − ε</text>
+
+                <!-- Sábana amarilla suave (Superficie z = f(x,y)) -->
+                <path d="M 135 65 Q 230 45 315 95 L 295 175 Q 210 135 120 145 Z" fill="#fde68a" fill-opacity="0.35" stroke="#fbbf24" stroke-width="1.5"/>
+
+                <!-- Disco de radio delta en el piso XY -->
+                <ellipse cx="220" cy="222" rx="${rDisk}" ry="${rDisk * 0.35}" fill="#fde047" fill-opacity="0.3" stroke="#facc15" stroke-width="1.8" stroke-dasharray="3,2"/>
+                <text x="275" y="248" fill="#fde047" font-size="11">Disco de radio δ</text>
+
+                <!-- Cilindro proyectado en la superficie -->
+                <ellipse cx="220" cy="105" rx="${rDisk}" ry="${epsPx * 0.65}" fill="#38bdf8" fill-opacity="0.45" stroke="#7dd3fc" stroke-width="2"/>
+
+                <!-- Líneas punteadas rosas de proyección desde (x0,y0) y (x1,y1) -->
+                <line x1="220" y1="222" x2="220" y2="105" stroke="#ec4899" stroke-width="2" stroke-dasharray="4,3"/>
+                <line x1="${220 - rDisk * 0.45}" y1="${222 - 4}" x2="${220 - rDisk * 0.45}" y2="${105 - epsPx * 0.3}" stroke="#ec4899" stroke-width="1.8" stroke-dasharray="4,3"/>
+
+                <circle cx="220" cy="222" r="3.5" fill="#ffffff"/>
+                <circle cx="220" cy="105" r="4" fill="#fbbf24"/>
+                <text x="220" y="238" text-anchor="middle" fill="#ffffff" font-size="10">(x₀, y₀)</text>
+            `;
+        };
+
+        // -------------------------------------------------------------------------
+        // 6. LÓGICA DEL SUBTEMA 4.3: SIMULADOR 2 (CAZADOR DE LÍMITES POR CAMINOS)
+        // -------------------------------------------------------------------------
+        let currentLimitCase = 'case3';
+        let currentPathRoute = 'y0';
+
+        window.setLimitCase = function(c) {
+            currentLimitCase = c;
+            ['case1', 'case2', 'case3'].forEach(id => {
+                const btn = document.getElementById('btn-lim-' + id);
+                if (id === c) {
+                    btn.className = "p-3.5 rounded-xl border-2 text-left transition-all bg-tecnm-blue text-white border-tecnm-blue shadow-md";
+                } else {
+                    btn.className = "p-3.5 rounded-xl border-2 text-left transition-all bg-white text-slate-800 border-slate-200 hover:border-slate-300";
+                }
+            });
+            window.renderPathHunter();
+        };
+
+        window.setPathRoute = function(r) {
+            currentPathRoute = r;
+            ['y0', 'x0', 'yx', 'y2x', 'yx2'].forEach(id => {
+                const btn = document.getElementById('btn-path-' + id);
+                if (id === r) {
+                    btn.className = "path-btn bg-pink-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm";
+                } else {
+                    btn.className = "path-btn bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-100";
+                }
+            });
+            window.renderPathHunter();
+        };
+
+        window.renderPathHunter = function() {
+            // Dibujar trayectoria en el radar SVG 2D
+            let pathSvgLine = '';
+            let routeLabel = '';
+            if (currentPathRoute === 'y0') {
+                pathSvgLine = `<line x1="20" y1="120" x2="260" y2="120" stroke="#db2777" stroke-width="4" stroke-dasharray="8,5" style="animation: particleWalk 2s linear infinite;"/>`;
+                routeLabel = 'Eje X (y = 0)';
+            } else if (currentPathRoute === 'x0') {
+                pathSvgLine = `<line x1="140" y1="15" x2="140" y2="225" stroke="#db2777" stroke-width="4" stroke-dasharray="8,5" style="animation: particleWalk 2s linear infinite;"/>`;
+                routeLabel = 'Eje Y (x = 0)';
+            } else if (currentPathRoute === 'yx') {
+                pathSvgLine = `<line x1="40" y1="220" x2="240" y2="20" stroke="#db2777" stroke-width="4" stroke-dasharray="8,5" style="animation: particleWalk 2s linear infinite;"/>`;
+                routeLabel = 'Recta Diagonal (y = x)';
+            } else if (currentPathRoute === 'y2x') {
+                pathSvgLine = `<line x1="90" y1="220" x2="190" y2="20" stroke="#db2777" stroke-width="4" stroke-dasharray="8,5" style="animation: particleWalk 2s linear infinite;"/>`;
+                routeLabel = 'Recta Inclinada (y = 2x)';
+            } else {
+                pathSvgLine = `<path d="M 45 35 Q 140 205 235 35" fill="none" stroke="#db2777" stroke-width="4" stroke-dasharray="8,5" style="animation: particleWalk 2s linear infinite;"/>`;
+                routeLabel = 'Parábola (y = x²)';
+            }
+
+            document.getElementById('pathRadarSvg').innerHTML = `
+                <circle cx="140" cy="120" r="85" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4,4"/>
+                <circle cx="140" cy="120" r="45" fill="#fce7f3" fill-opacity="0.4" stroke="#f472b6" stroke-width="1" stroke-dasharray="3,3"/>
+                <line x1="15" y1="120" x2="265" y2="120" stroke="#64748b" stroke-width="1.5"/>
+                <line x1="140" y1="10" x2="140" y2="230" stroke="#64748b" stroke-width="1.5"/>
+                ${pathSvgLine}
+                <circle cx="140" cy="120" r="6" fill="#0f172a" stroke="#ffffff" stroke-width="2"/>
+                <text x="140" y="105" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">Origen (0,0)</text>
+                <text x="140" y="234" text-anchor="middle" font-size="11" font-weight="bold" fill="#be185d">${routeLabel}</text>
+            `;
+
+            const badge = document.getElementById('pathLimitBadge');
+            const steps = document.getElementById('pathMathSteps');
+            const conc = document.getElementById('pathConclusionBox');
+
+            if (currentLimitCase === 'case1') {
+                badge.className = "text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800";
+                badge.innerText = "✔ El Límite SÍ Existe (L = 0)";
+                let subText = '';
+                if (currentPathRoute === 'y0') subText = `Al sustituir <b><i>y</i> = 0</b>: &nbsp; <span class="math-serif"><i>f</i>(<i>x</i>, 0) = 5<i>x</i>²(0) / (<i>x</i>² + 0²) = 0 / <i>x</i>² = <b>0</b></span>.`;
+                else if (currentPathRoute === 'x0') subText = `Al sustituir <b><i>x</i> = 0</b>: &nbsp; <span class="math-serif"><i>f</i>(0, <i>y</i>) = 5(0)²<i>y</i> / (0² + <i>y</i>²) = 0 / <i>y</i>² = <b>0</b></span>.`;
+                else if (currentPathRoute === 'yx') subText = `Al sustituir <b><i>y</i> = <i>x</i></b>: &nbsp; <span class="math-serif"><i>f</i>(<i>x</i>, <i>x</i>) = 5<i>x</i>³ / (2<i>x</i>²) = (5/2)<i>x</i> → <b>0</b> cuando <i>x</i> → 0</span>.`;
+                else if (currentPathRoute === 'y2x') subText = `Al sustituir <b><i>y</i> = 2<i>x</i></b>: &nbsp; <span class="math-serif"><i>f</i>(<i>x</i>, 2<i>x</i>) = 10<i>x</i>³ / (5<i>x</i>²) = 2<i>x</i> → <b>0</b> cuando <i>x</i> → 0</span>.`;
+                else subText = `Al sustituir <b><i>y</i> = <i>x</i>²</b>: &nbsp; <span class="math-serif"><i>f</i>(<i>x</i>, <i>x</i>²) = 5<i>x</i>⁴ / (<i>x</i>² + <i>x</i>⁴) = 5<i>x</i>² / (1 + <i>x</i>²) → <b>0</b> cuando <i>x</i> → 0</span>.`;
+
+                steps.innerHTML = `<div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">${subText}</div>`;
+                conc.innerHTML = `<strong>Veredicto Matemático:</strong> Como el grado del numerador (grado 3: <span class="math-serif"><i>x</i>²<i>y</i></span>) es mayor que el del denominador (grado 2: <span class="math-serif"><i>x</i>² + <i>y</i>²</span>), al acercarse a (0,0) por <strong>cualquier trayectoria</strong> la altura siempre converge a <strong><i>L</i> = 0</strong>.`;
+            } else if (currentLimitCase === 'case2') {
+                badge.className = "text-xs font-extrabold px-3 py-1 rounded-full bg-amber-100 text-amber-800";
+                badge.innerText = "✖ El Límite NO Existe (Crece a +∞)";
+                steps.innerHTML = `
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+                        Por <b>${routeLabel}</b>: Cuando <span class="math-serif">(<i>x, y</i>) → (0, 0)</span>, el denominador <span class="math-serif">(<i>x</i>² + <i>y</i>²)</span> se hace extremadamente pequeño (positivo cercano a 0), por lo que <span class="math-serif">1 / (<i>x</i>² + <i>y</i>²) → <b>+∞</b></span>.
+                    </div>`;
+                conc.innerHTML = `<strong>Veredicto (Figura 13.22 del Libro):</strong> El límite <strong>no existe</strong> porque el valor de <span class="math-serif"><i>f(x, y)</i></span> crece sin tope (forma un embudo infinito hacia arriba) a lo largo de cualquier trayectoria.`;
+            } else {
+                badge.className = "text-xs font-extrabold px-3 py-1 rounded-full bg-rose-100 text-rose-800";
+                badge.innerText = "✖ El Límite NO Existe (Choque de Caminos)";
+                let subText = '';
+                if (currentPathRoute === 'y0') {
+                    subText = `Por el <b>Eje X (<i>y</i> = 0)</b>: &nbsp; <span class="math-serif"><i>f</i>(<i>x</i>, 0) = [ (<i>x</i>² − 0²) / (<i>x</i>² + 0²) ]² = (<i>x</i>² / <i>x</i>²)² = (1)² = <strong class="text-rose-600 text-lg">1</strong></span>`;
+                } else if (currentPathRoute === 'x0') {
+                    subText = `Por el <b>Eje Y (<i>x</i> = 0)</b>: &nbsp; <span class="math-serif"><i>f</i>(0, <i>y</i>) = [ (0² − <i>y</i>²) / (0² + <i>y</i>²) ]² = (−<i>y</i>² / <i>y</i>²)² = (−1)² = <strong class="text-rose-600 text-lg">1</strong></span>`;
+                } else if (currentPathRoute === 'yx') {
+                    subText = `Por la <b>Diagonal (<i>y</i> = <i>x</i>)</b>: &nbsp; <span class="math-serif"><i>f</i>(<i>x</i>, <i>x</i>) = [ (<i>x</i>² − <i>x</i>²) / (<i>x</i>² + <i>x</i>²) ]² = (0 / 2<i>x</i>²)² = <strong class="text-sky-600 text-lg">0</strong></span>`;
+                } else if (currentPathRoute === 'y2x') {
+                    subText = `Por la <b>Recta (<i>y</i> = 2<i>x</i>)</b>: &nbsp; <span class="math-serif"><i>f</i>(<i>x</i>, 2<i>x</i>) = [ (<i>x</i>² − 4<i>x</i>²) / (<i>x</i>² + 4<i>x</i>²) ]² = (−3<i>x</i>² / 5<i>x</i>²)² = <strong class="text-purple-600 text-lg">9/25 = 0.36</strong></span>`;
+                } else {
+                    subText = `Por la <b>Parábola (<i>y</i> = <i>x</i>²)</b>: &nbsp; <span class="math-serif"><i>f</i>(<i>x</i>, <i>x</i>²) = [ (<i>x</i>² − <i>x</i>⁴) / (<i>x</i>² + <i>x</i>⁴) ]² = [ (1 − <i>x</i>²) / (1 + <i>x</i>²) ]² → <strong class="text-rose-600 text-lg">1</strong></span>`;
+                }
+                steps.innerHTML = `<div class="p-3 bg-rose-50 rounded-xl border border-rose-200">${subText}</div>`;
+                conc.innerHTML = `<strong>Veredicto Clásico de Examen:</strong> Si te acercas por los ejes obtienes <b>L = 1</b>, pero si te acercas por la diagonal <span class="math-serif"><i>y = x</i></span> obtienes <b>L = 0</b> (y por <span class="math-serif"><i>y = 2x</i></span> da <b>0.36</b>). Como <b>1 ≠ 0</b>, ¡queda demostrado que <strong>el límite NO existe</strong>!`;
+            }
+        };
+
+        // -------------------------------------------------------------------------
+        // 7. LÓGICA DEL SUBTEMA 4.3: SIMULADOR 3 (PARCHAR DISCONTINUIDAD REMOVIBLE)
+        // -------------------------------------------------------------------------
+        let isHolePatched = false;
+
+        window.togglePatchHole = function() {
+            isHolePatched = !isHolePatched;
+            window.renderRemovableSimulator();
+        };
+
+        window.renderRemovableSimulator = function() {
+            const btn = document.getElementById('patchBtn');
+            const badge = document.getElementById('removableStatusBadge');
+            const svg = document.getElementById('removableSvg');
+
+            if (!isHolePatched) {
+                btn.innerText = "🔧 Parchar agujero: Redefinir f(0,0) = 0";
+                btn.className = "bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all";
+                badge.innerText = "Discontinua en (0,0)";
+                badge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold";
+
+                svg.innerHTML = `
+                    <path d="M 20 95 Q 85 45 140 75 Q 195 105 260 55" fill="none" stroke="#10b981" stroke-width="4"/>
+                    <circle cx="140" cy="75" r="7" fill="#0f172a" stroke="#fbbf24" stroke-width="3"/>
+                    <text x="140" y="55" text-anchor="middle" font-size="10" fill="#fbbf24" font-weight="bold">Hueco 0/0 en (0,0)</text>
+                    <text x="140" y="122" text-anchor="middle" font-size="10" fill="#cbd5e1">El límite sí existe (L = 0), pero falta el punto central</text>
+                `;
+            } else {
+                btn.innerText = "↩ Quitar parche (Ver hueco original)";
+                btn.className = "bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all";
+                badge.innerText = "✔ ¡Continua en todo R²!";
+                badge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold";
+
+                svg.innerHTML = `
+                    <path d="M 20 95 Q 85 45 140 75 Q 195 105 260 55" fill="none" stroke="#10b981" stroke-width="4"/>
+                    <circle cx="140" cy="75" r="7" fill="#10b981" stroke="#ffffff" stroke-width="2.5"/>
+                    <text x="140" y="55" text-anchor="middle" font-size="10" fill="#34d399" font-weight="bold">✔ Parche aplicado: f(0,0) = 0</text>
+                    <text x="140" y="122" text-anchor="middle" font-size="10" fill="#a7f3d0">¡Superficie 100% continua sin rasgaduras!</text>
+                `;
+            }
+        };
+
+        // -------------------------------------------------------------------------
+        // INICIALIZACIÓN AL CARGAR LA PÁGINA
+        // -------------------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('sliderX').addEventListener('input', window.updateAnalogy);
+            document.getElementById('sliderY').addEventListener('input', window.updateAnalogy);
+            document.getElementById('traceZSlider').addEventListener('input', window.renderTraceSimulator);
+            document.getElementById('deltaRegionSlider').addEventListener('input', window.renderRegionSimulator);
+            document.getElementById('epsDeltaSlider').addEventListener('input', window.renderEpsDeltaSimulator);
+
+            window.setAnalogy('freidora');
+            window.renderTraceSimulator();
+            window.renderRegionSimulator();
+            window.renderEpsDeltaSimulator();
+            window.renderPathHunter();
+            window.renderRemovableSimulator();
+
+            // Mostrar la pestaña 4.3 activa por defecto para revisión inmediata
+            window.switchTab('4-3');
+        });
+    </script>
+</body>
+</html>
